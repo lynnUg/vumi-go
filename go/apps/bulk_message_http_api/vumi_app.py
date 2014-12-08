@@ -202,7 +202,7 @@ class BulkHTTPWorker(GoApplicationWorker):
 
     @inlineCallbacks
     def setup_application(self):
-        yield super(NoStreamingHTTPWorker, self).setup_application()
+        yield super(BulkHTTPWorker, self).setup_application()
         config = self.get_static_config()
         self.web_path = config.web_path
         self.web_port = config.web_port
