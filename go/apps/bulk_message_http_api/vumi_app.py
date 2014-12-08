@@ -195,7 +195,7 @@ class ConcurrencyLimitManager(object):
         self._get_limiter(key).stop()
         self._cleanup_limiter(key)
 
-class NoStreamingHTTPWorker(GoApplicationWorker):
+class BulkHTTPWorker(GoApplicationWorker):
 
     worker_name = 'bulk_message_http_api_worker'
     CONFIG_CLASS = HTTPWorkerConfig

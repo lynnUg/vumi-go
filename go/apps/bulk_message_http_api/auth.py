@@ -17,3 +17,6 @@ class AuthorizedResource(resource.Resource):
 
     def getChild(self, conversation_key, request):
        log.warning("in api")
+       log.warning(conversation_key)
+       log.warning(request)
+       pass
