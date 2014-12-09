@@ -182,9 +182,9 @@ class ApiResource(resource.Resource):
         resource_class = self.get_child_resource(path)
 
         if resource_class is None:
-            returnValue(resource.NoResource())
+            return resource.NoResource()
 
-        returnValue(resource_class(self.worker))
+        return resource_class(self.worker)
         
 
     def get_child_resource(self, path):
