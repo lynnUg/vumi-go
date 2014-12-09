@@ -1,6 +1,6 @@
 from twisted.trial.unittest import TestCase
 
-from go.apps.bulk_message_http_api import MsgOptions
+from go.apps.bulk_message_http_api.resource import MsgOptions
 
 
 class ToyMsgOptions(MsgOptions):
