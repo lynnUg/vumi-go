@@ -58,7 +58,7 @@ class AuthorizedResource(resource.Resource):
        log.warning("in api")
        log.warning(conversation_key)
        log.warning(request)
-       myresource = self.resource_class()
+       myresource = self.resource_class(self.worker)
        checker = PasswordDictChecker(passwords)
        realm = HttpPasswordRealm(myresource)
        p = portal.Portal(realm, [checker])
