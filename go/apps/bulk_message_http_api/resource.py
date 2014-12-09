@@ -1,4 +1,4 @@
-from twisted.web import resource
+from twisted.web import static, resource
 class ApiResource(resource.Resource):
  
     def __init__(self):
