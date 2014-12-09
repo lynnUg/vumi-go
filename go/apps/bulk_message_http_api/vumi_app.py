@@ -12,6 +12,7 @@ from vumi import log
 
 from go.apps.bulk_message_http_api.auth import AuthorizedResource
 from go.apps.http_api_nostream.resource import ConversationResource
+from go.apps.bulk_message_http_api.resource import ApiResource
 from go.base.utils import extract_auth_from_url
 from go.vumitools.app_worker import GoApplicationWorker
 
@@ -221,7 +222,7 @@ class BulkHTTPWorker(GoApplicationWorker):
         ], self.web_port)
 
     def get_conversation_resource(self):
-        return AuthorizedResource(self)
+        return AuthorizedResource(self,ApiResource)
 
     @inlineCallbacks
     def teardown_application(self):
