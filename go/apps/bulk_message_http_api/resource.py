@@ -177,7 +177,7 @@ class ApiResource(resource.Resource):
  
     def getChild(self, path, request):
         return util.DeferredResource(self.getDeferredChild(path, request))
-    @inlineCallbacks
+   
     def getDeferredChild(self, path, request):
         resource_class = self.get_child_resource(path)
 
