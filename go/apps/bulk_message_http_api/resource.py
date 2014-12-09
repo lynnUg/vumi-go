@@ -176,6 +176,26 @@ class ApiResource(resource.Resource):
     def __init__(self,worker):
         resource.Resource.__init__(self)
         self.worker = worker
+        self.redis = worker.redis
+
+    def key(self, *args):
+        return ':'.join(['concurrency'] + map(unicode, args))
+
+    @inlineCallbacks
+    def is_allowed(self, config, user_id):
+        if config.concurrency_limit < 0:
+            returnValue(True)
+        count = int((yield self.redis.get(self.key(user_id))) or 0)
+        returnValue(count < config.concurrency_limit)
+
+    def track_request(self, user_id):
+        return self.redis.incr(self.key(user_id))
+
+    def release_request(self, err, user_id):
+        return self.redis.decr(self.key(user_id))
+
+    def render(self, request):
+        return resource.NoResource().render(request)
  
     def getChild(self, path, request):
         return self.getDeferredChild(path, request)
