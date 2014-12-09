@@ -64,7 +64,8 @@ class AuthorizedResource(resource.Resource):
        p = portal.Portal(realm, [checker])
        credentialFactory = BasicCredentialFactory("AccessMobile Messaging Api")
        protected_resource = HTTPAuthSessionWrapper(p, [credentialFactory])
-       pass
+       return protected_resource
+       
 passwords = {
     'admin': 'aaa',
     'user1': 'bbb',
