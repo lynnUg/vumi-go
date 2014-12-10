@@ -136,7 +136,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
                                            method='PUT')
         self.assertEqual(response.code, http.UNAUTHORIZED)
         self.assertEqual(response.headers.getRawHeaders('www-authenticate'), [
-            'basic realm="Conversation Realm"'])
+            'basic realm="AccessMobile Messaging Api"'])
 
     @inlineCallbacks
     def test_send_to(self):
