@@ -152,20 +152,20 @@ class MessageResource(BaseResource):
     @inlineCallbacks
     def handle_PUT_send_to(self, request, payload):
         user_account = request.getUser()
-        conversation = yield self.get_conversation(user_account)
+        #conversation = yield self.get_conversation(user_account)
 
         msg_options = SendToOptions(payload)
         if not msg_options.is_valid:
             self.client_error_response(request, msg_options.error_msg)
             return
 
-        helper_metadata = conversation.set_go_helper_metadata()
+        #helper_metadata = conversation.set_go_helper_metadata()
 
-        msg = yield self.worker.send_to(
-            msg_options.to_addr, msg_options.content,
-            endpoint='default', helper_metadata=helper_metadata)
+        #msg = yield self.worker.send_to(
+            #msg_options.to_addr, msg_options.content,
+            #endpoint='default', helper_metadata=helper_metadata)
 
-        self.successful_send_response(request, msg)
+        self.successful_send_response(request, '{okay}')
 
 
 
