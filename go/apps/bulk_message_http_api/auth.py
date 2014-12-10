@@ -34,12 +34,10 @@ class PasswordDictChecker:
                 tokens = self.worker.get_api_config(
                     conversation, 'api_tokens', [])
                 if token in tokens:
-                  return defer.succeed(username)
-            return defer.fail(
-                    credError.UnauthorizedLogin("Bad password"))
+                  returnValue(username)
+            raise credError.UnauthorizedLogin("Bad password")
         else:
-            return defer.fail(
-                credError.UnauthorizedLogin("No such user"))
+            raise credError.UnauthorizedLogin("No such user")
  
 class HttpPasswordRealm(object):
     implements(portal.IRealm)
