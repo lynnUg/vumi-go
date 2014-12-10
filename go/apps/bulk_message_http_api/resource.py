@@ -189,15 +189,28 @@ class ApiResource(resource.Resource):
         return resource.NoResource().render(request)
  
     def getChild(self, path, request):
-        return self.getDeferredChild(path, request)
-   
+        return util.DeferredResource(self.getDeferredChild(path, request))
+        
+    @inlineCallbacks
     def getDeferredChild(self, path, request):
         resource_class = self.get_child_resource(path)
 
         if resource_class is None:
-            return resource.NoResource()
+            returnValue( resource.NoResource())
 
-        return resource_class(self.worker)
+        user_id = request.getUser()
+        config = yield self.get_worker_config(user_id)
+        if (yield self.is_allowed(config, user_id)):
+
+            # remove track when request is closed
+            finished = request.notifyFinish()
+            finished.addBoth(self.release_request, user_id)
+
+            yield self.track_request(user_id)
+            returnValue(resource_class(self.worker))
+        returnValue(resource.ErrorPage(http.FORBIDDEN, 'Forbidden',
+                                       'Too many concurrent connections'))
+        
         
 
     def get_child_resource(self, path):
