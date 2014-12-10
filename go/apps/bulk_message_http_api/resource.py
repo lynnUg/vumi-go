@@ -140,19 +140,18 @@ class MessageResource(BaseResource):
 
      
         user_account = request.getUser()
-        #d = self.worker.concurrency_limiter.start(user_account)
+        d = self.worker.concurrency_limiter.start(user_account)
         try:
              yield self.handle_PUT_send_to(request, payload)
         finally:
-            #self.worker.concurrency_limiter.stop(user_account)
-            print "here"
+            self.worker.concurrency_limiter.stop(user_account)
+            
 
    
 
-    @inlineCallbacks
+   
     def handle_PUT_send_to(self, request, payload):
         user_account = request.getUser()
-        #conversation = yield self.get_conversation(user_account)
 
         msg_options = SendToOptions(payload)
         if not msg_options.is_valid:
