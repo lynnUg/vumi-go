@@ -216,32 +216,6 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
         self.assert_bad_request(
             response, "Invalid or missing value for payload key 'to_addr'")
 
-    @inlineCallbacks
-    def test_in_reply_to(self):
-        yield self.start_app_worker()
-        inbound_msg = yield self.app_helper.make_stored_inbound(
-            self.conversation, 'in 1', message_id='1')
-
-        msg = {
-            'content': 'foo',
-            'in_reply_to': inbound_msg['message_id'],
-        }
-
-        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
-        response = yield http_request_full(url, json.dumps(msg),
-                                           self.auth_headers, method='PUT')
-        self.assertEqual(
-            response.headers.getRawHeaders('content-type'),
-            ['application/json; charset=utf-8'])
-        put_msg = json.loads(response.delivered_body)
-        self.assertEqual(response.code, http.OK)
-
-        [sent_msg] = self.app_helper.get_dispatched_outbound()
-        self.assertEqual(sent_msg['to_addr'], put_msg['to_addr'])
-        self.assertEqual(sent_msg['message_id'], put_msg['message_id'])
-        self.assertEqual(sent_msg['session_event'], None)
-        self.assertEqual(sent_msg['to_addr'], inbound_msg['from_addr'])
-        self.assertEqual(sent_msg['from_addr'], '9292')
 
    
 
