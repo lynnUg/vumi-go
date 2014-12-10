@@ -47,7 +47,7 @@ class TestBulkHTTPWorkerBase(VumiTestCase):
 
         self.auth_headers = {
             'Authorization': ['Basic ' + base64.b64encode('%s:%s' % (
-                'admin', 'token-1'))],
+                'admin', 'aaa'))],
         }
 
         self._setup_wait_for_request()
