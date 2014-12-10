@@ -196,7 +196,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'message_id': 'evil_id',
         }
 
-        url = '%s/messages.json' % (self.url)
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
         d = http_request_full(
             url, json.dumps(msg), self.auth_headers, method='PUT',
             timeout=0.2)
@@ -211,7 +211,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'to_addr': '+1234',
         }
 
-        url = '%s/messages.json' % (self.url)
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
         self.assert_bad_request(
@@ -225,7 +225,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'to_addr': 1234,
         }
 
-        url = '%s/messages.json' % (self.url)
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
         self.assert_bad_request(
