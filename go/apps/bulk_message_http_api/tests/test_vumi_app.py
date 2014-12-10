@@ -150,6 +150,8 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
         url = '%s/%s/messages.json' % (self.url, 'conversation10')
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
+        print "delivery body"
+        print response.delivered_body
 
         self.assertEqual(response.code, http.OK)
         self.assertEqual(
