@@ -162,7 +162,6 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
         # We do not respect the message_id that's been given.
         self.assertEqual(msg['message_id'], put_msg['message_id'])
         self.assertEqual(put_msg['to_addr'], msg['to_addr'])
-        self.assertEqual(put_msg['from_addr'], None)
 
     @inlineCallbacks
     def test_send_to_with_zero_worker_concurrency(self):
