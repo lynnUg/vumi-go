@@ -55,7 +55,7 @@ class BaseResource(resource.Resource):
         self.finish_response(request, msg, code=code, status=reason)
 
     def successful_send_response(self, request, msg, code=http.OK):
-        self.finish_response(request, msg.to_json(), code=code)
+        self.finish_response(request, msg, code=code)
 
 
 class MsgOptions(object):
