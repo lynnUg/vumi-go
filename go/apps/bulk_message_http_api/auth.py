@@ -16,6 +16,11 @@ from twisted.web.resource import IResource
 class PasswordChecker:
     implements(checkers.ICredentialsChecker)
     credentialInterfaces = (credentials.IUsernamePassword,)
+    '''
+    Adding AccessMobile auth however needs to be refactored.Currently uses http api token
+    keys
+
+    '''
  
     def __init__(self, worker,conversation_key):
       self.worker=worker
@@ -52,6 +57,7 @@ class HttpPasswordRealm(object):
             return (IResource, self.myresource, lambda: None)
         raise NotImplementedError()
 class AuthorizedResource(resource.Resource):
+  
 
     def __init__(self, worker,resource_class):
         resource.Resource.__init__(self)
