@@ -159,13 +159,10 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             ['application/json; charset=utf-8'])
         put_msg = json.loads(response.delivered_body)
 
-        [sent_msg] = self.app_helper.get_dispatched_outbound()
-        self.assertEqual(sent_msg['to_addr'], sent_msg['to_addr'])
         # We do not respect the message_id that's been given.
-        self.assertNotEqual(sent_msg['message_id'], msg['message_id'])
-        self.assertEqual(sent_msg['message_id'], put_msg['message_id'])
-        self.assertEqual(sent_msg['to_addr'], msg['to_addr'])
-        self.assertEqual(sent_msg['from_addr'], None)
+        self.assertEqual(msg['message_id'], put_msg['message_id'])
+        self.assertEqual(put_msg['to_addr'], msg['to_addr'])
+        self.assertEqual(put_msg['from_addr'], None)
 
     @inlineCallbacks
     def test_send_to_with_zero_worker_concurrency(self):

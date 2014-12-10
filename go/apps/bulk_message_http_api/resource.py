@@ -152,12 +152,11 @@ class MessageResource(BaseResource):
    
     def handle_PUT_send_to(self, request, payload):
         user_account = request.getUser()
-
         msg_options = SendToOptions(payload)
         if not msg_options.is_valid:
             self.client_error_response(request, msg_options.error_msg)
             return
-        m = {'id': 2, 'name': 'AccessMobile Message  api'}  
+        m = payload  
         n = json.dumps(m) 
         self.successful_send_response(request, n)
 
