@@ -60,7 +60,7 @@ class AuthorizedResource(resource.Resource):
     def render(self, request):
         return resource.NoResource().render(request)
 
-    def getChild(self, request):
+    def getChild(self,conv,request):
        myresource = self.resource_class(self.worker)
        checker = PasswordChecker(self.worker)
        realm = HttpPasswordRealm(myresource)
