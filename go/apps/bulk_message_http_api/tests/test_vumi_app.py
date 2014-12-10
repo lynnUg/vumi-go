@@ -43,12 +43,16 @@ class TestBulkHTTPWorkerBase(VumiTestCase):
         yield self.mock_push_server.start()
         self.add_cleanup(self.mock_push_server.stop)
         self.push_calls = DeferredQueue()
-
+        self.conversation = yield self.create_conversation(
+            self.get_message_url(), self.get_event_url(),
+            ['token-1', 'token-2', 'token-3'])
 
         self.auth_headers = {
             'Authorization': ['Basic ' + base64.b64encode('%s:%s' % (
-                'admin', 'aaa'))],
+                self.conversation.user_account.key, 'token-1'))],
         }
+
+        
 
         self._setup_wait_for_request()
         self.add_cleanup(self._wait_for_requests)
@@ -58,7 +62,22 @@ class TestBulkHTTPWorkerBase(VumiTestCase):
 
     def get_event_url(self):
         return self.mock_push_server.url
+   
 
+    @inlineCallbacks
+    def create_conversation(self, message_url, event_url, tokens):
+        config = {
+            'http_api_nostream': {
+                'api_tokens': tokens,
+                'push_message_url': message_url,
+                'push_event_url': event_url,
+                'metric_store': 'metric_store',
+            }
+        }
+        conv = yield self.app_helper.create_conversation(config=config)
+        yield self.app_helper.start_conversation(conv)
+        conversation = yield self.app_helper.get_conversation(conv.key)
+        returnValue(conversation)
    
 
     def _setup_wait_for_request(self):
@@ -108,7 +127,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_missing_auth(self):
         yield self.start_app_worker()
-        url = '%s/%s/messages.json' % (self.url, 'conversation10')
+        url = '%s/%s/messages.json' % (self.url)
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
@@ -123,7 +142,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_invalid_auth(self):
         yield self.start_app_worker()
-        url = '%s/%s/messages.json' % (self.url, 'conversation10')
+        url = '%s/%s/messages.json' % (self.url)
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
@@ -147,11 +166,9 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'message_id': 'evil_id',
         }
 
-        url = '%s/%s/messages.json' % (self.url, 'conversation10')
+        url = '%s/%s/messages.json' % (self.url)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
-        print "delivery body"
-        print response.delivered_body
 
         self.assertEqual(response.code, http.OK)
         self.assertEqual(

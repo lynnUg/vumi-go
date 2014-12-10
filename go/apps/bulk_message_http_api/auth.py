@@ -20,14 +20,22 @@ class PasswordDictChecker:
     def __init__(self, passwords):
         "passwords: a dict-like object mapping usernames to passwords"
         self.passwords = passwords
- 
+
+    @inlineCallbacks
     def requestAvatarId(self, credentials):
         username = credentials.username
-        if self.passwords.has_key(username):
-            if credentials.password == self.passwords[username]:
-                return defer.succeed(username)
-            else:
-                return defer.fail(
+        token = credentials.password
+        user_exists = yield self.worker.vumi_api.user_exists(username)
+        if user_exists:
+            user_api = self.worker.vumi_api.get_user_api(username)
+            conversation = yield user_api.get_wrapped_conversation(
+                self.conversation_key)
+            if conversation is not None:
+                tokens = self.worker.get_api_config(
+                    conversation, 'api_tokens', [])
+                if token in tokens:
+                  return defer.succeed(username)
+            return defer.fail(
                     credError.UnauthorizedLogin("Bad password"))
         else:
             return defer.fail(
@@ -54,10 +62,7 @@ class AuthorizedResource(resource.Resource):
     def render(self, request):
         return resource.NoResource().render(request)
 
-    def getChild(self, conversation_key, request):
-       log.warning("in api")
-       log.warning(conversation_key)
-       log.warning(request)
+    def getChild(self, request):
        myresource = self.resource_class(self.worker)
        checker = PasswordDictChecker(passwords)
        realm = HttpPasswordRealm(myresource)
@@ -66,8 +71,3 @@ class AuthorizedResource(resource.Resource):
        protected_resource = HTTPAuthSessionWrapper(p, [credentialFactory])
        return protected_resource
        
-passwords = {
-    'admin': 'aaa',
-    'user1': 'bbb',
-    'user2': 'ccc'
-    }
