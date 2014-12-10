@@ -158,14 +158,9 @@ class MessageResource(BaseResource):
         if not msg_options.is_valid:
             self.client_error_response(request, msg_options.error_msg)
             return
-
-        #helper_metadata = conversation.set_go_helper_metadata()
-
-        #msg = yield self.worker.send_to(
-            #msg_options.to_addr, msg_options.content,
-            #endpoint='default', helper_metadata=helper_metadata)
-
-        self.successful_send_response(request, '{okay}')
+        m = {'id': 2, 'name': 'AccessMobile Message  api'}  
+        n = json.dumps(m) 
+        self.successful_send_response(request, m)
 
 
 
