@@ -17,8 +17,9 @@ class PasswordChecker:
     implements(checkers.ICredentialsChecker)
     credentialInterfaces = (credentials.IUsernamePassword,)
  
-    def __init__(self, worker):
+    def __init__(self, worker,conversation_key):
       self.worker=worker
+      self.conversation_key = conversation_key
         
 
     @inlineCallbacks
@@ -60,9 +61,9 @@ class AuthorizedResource(resource.Resource):
     def render(self, request):
         return resource.NoResource().render(request)
 
-    def getChild(self,conv,request):
+    def getChild(self,conversation_key,request):
        myresource = self.resource_class(self.worker)
-       checker = PasswordChecker(self.worker)
+       checker = PasswordChecker(self.worker,conversation_key)
        realm = HttpPasswordRealm(myresource)
        p = portal.Portal(realm, [checker])
        credentialFactory = BasicCredentialFactory("AccessMobile Messaging Api")

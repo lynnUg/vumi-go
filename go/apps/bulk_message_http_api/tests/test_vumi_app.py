@@ -127,9 +127,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_missing_auth(self):
         yield self.start_app_worker()
-        url = '%s/%s/messages.json' % (self.url,'conversation10')
-        print "address"
-        print url
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
@@ -144,7 +142,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_invalid_auth(self):
         yield self.start_app_worker()
-        url = '%s/messages.json' % (self.url)
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
@@ -168,7 +166,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'message_id': 'evil_id',
         }
 
-        url = '%s/messages.json' % (self.url)
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
 
