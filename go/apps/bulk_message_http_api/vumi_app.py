@@ -226,7 +226,7 @@ class BulkHTTPWorker(GoApplicationWorker):
 
     @inlineCallbacks
     def teardown_application(self):
-        yield super(NoStreamingHTTPWorker, self).teardown_application()
+        yield super(BulkHTTPWorker, self).teardown_application()
         yield self.webserver.loseConnection()
 
     def get_api_config(self, conversation, key, default=None):
