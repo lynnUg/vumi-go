@@ -171,6 +171,10 @@ class ApiResource(resource.Resource):
 
     def key(self, *args):
         return ':'.join(['concurrency'] + map(unicode, args))
+        
+    def get_worker_config(self, user_account_key):
+        ctxt = ConfigContext(user_account=user_account_key)
+        return self.worker.get_config(msg=None, ctxt=ctxt)
 
     @inlineCallbacks
     def is_allowed(self, config, user_id):
@@ -190,7 +194,7 @@ class ApiResource(resource.Resource):
  
     def getChild(self, path, request):
         return util.DeferredResource(self.getDeferredChild(path, request))
-        
+
     @inlineCallbacks
     def getDeferredChild(self, path, request):
         resource_class = self.get_child_resource(path)
