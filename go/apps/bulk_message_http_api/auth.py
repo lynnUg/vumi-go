@@ -13,13 +13,13 @@ from twisted.web.resource import IResource
 
 
  
-class PasswordDictChecker:
+class PasswordChecker:
     implements(checkers.ICredentialsChecker)
     credentialInterfaces = (credentials.IUsernamePassword,)
  
-    def __init__(self, passwords):
-        "passwords: a dict-like object mapping usernames to passwords"
-        self.passwords = passwords
+    def __init__(self, worker):
+      self.worker=worker
+        
 
     @inlineCallbacks
     def requestAvatarId(self, credentials):
@@ -62,7 +62,7 @@ class AuthorizedResource(resource.Resource):
 
     def getChild(self, request):
        myresource = self.resource_class(self.worker)
-       checker = PasswordDictChecker(passwords)
+       checker = PasswordChecker(self.worker)
        realm = HttpPasswordRealm(myresource)
        p = portal.Portal(realm, [checker])
        credentialFactory = BasicCredentialFactory("AccessMobile Messaging Api")

@@ -127,7 +127,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_missing_auth(self):
         yield self.start_app_worker()
-        url = '%s/%s/messages.json' % (self.url)
+        url = '%s/messages.json' % (self.url)
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
@@ -142,7 +142,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_invalid_auth(self):
         yield self.start_app_worker()
-        url = '%s/%s/messages.json' % (self.url)
+        url = '%s/messages.json' % (self.url)
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
@@ -166,7 +166,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'message_id': 'evil_id',
         }
 
-        url = '%s/%s/messages.json' % (self.url)
+        url = '%s/messages.json' % (self.url)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
 
@@ -196,7 +196,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'message_id': 'evil_id',
         }
 
-        url = '%s/%s/messages.json' % (self.url, 'conversation10')
+        url = '%s/messages.json' % (self.url)
         d = http_request_full(
             url, json.dumps(msg), self.auth_headers, method='PUT',
             timeout=0.2)
@@ -211,7 +211,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'to_addr': '+1234',
         }
 
-        url = '%s/%s/messages.json' % (self.url, 'conversation10')
+        url = '%s/messages.json' % (self.url)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
         self.assert_bad_request(
@@ -225,7 +225,7 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             'to_addr': 1234,
         }
 
-        url = '%s/%s/messages.json' % (self.url, 'conversation10')
+        url = '%s/messages.json' % (self.url)
         response = yield http_request_full(url, json.dumps(msg),
                                            self.auth_headers, method='PUT')
         self.assert_bad_request(
