@@ -127,7 +127,9 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
     @inlineCallbacks
     def test_missing_auth(self):
         yield self.start_app_worker()
-        url = '%smessages.json' % (self.url)
+        url = '%s/messages.json' % (self.url)
+        print "address"
+        print url
         msg = {
             'to_addr': '+2345',
             'content': 'foo',
