@@ -160,7 +160,7 @@ class MessageResource(BaseResource):
             return
         m = {'id': 2, 'name': 'AccessMobile Message  api'}  
         n = json.dumps(m) 
-        self.successful_send_response(request, m)
+        self.successful_send_response(request, n)
 
 
 
