@@ -325,8 +325,9 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
         d = http_request_full(
             url, json.dumps(msg), self.auth_headers, method='PUT',
             timeout=0.2)
-
-        #yield self.assertFailure(d, HttpTimeoutError)
+        print "response"
+        print d.delivered_body
+       # yield self.assertFailure(d, HttpTimeoutError)
 
     @inlineCallbacks
     def test_in_send_to_with_evil_content(self):
