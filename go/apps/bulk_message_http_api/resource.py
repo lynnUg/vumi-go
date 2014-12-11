@@ -171,10 +171,6 @@ class ApiResource(resource.Resource):
 
     def key(self, *args):
         return ':'.join(['concurrency'] + map(unicode, args))
-        
-    def get_worker_config(self, user_account_key):
-        ctxt = ConfigContext(user_account=user_account_key)
-        return self.worker.get_config(msg=None, ctxt=ctxt)
 
     @inlineCallbacks
     def is_allowed(self, config, user_id):
@@ -193,28 +189,18 @@ class ApiResource(resource.Resource):
         return resource.NoResource().render(request)
  
     def getChild(self, path, request):
-        return util.DeferredResource(self.getDeferredChild(path, request))
-
-    @inlineCallbacks
+        return self.getDeferredChild(path, request)
+   
     def getDeferredChild(self, path, request):
         resource_class = self.get_child_resource(path)
 
         if resource_class is None:
-            returnValue( resource.NoResource())
+            return resource.NoResource()
 
-        user_id = request.getUser()
-        config = yield self.get_worker_config(user_id)
-        if (yield self.is_allowed(config, user_id)):
+        user_id=request.getUser()
+        config= yield self.get_wo
 
-            # remove track when request is closed
-            finished = request.notifyFinish()
-            finished.addBoth(self.release_request, user_id)
-
-            yield self.track_request(user_id)
-            returnValue(resource_class(self.worker))
-        returnValue(resource.ErrorPage(http.FORBIDDEN, 'Forbidden',
-                                       'Too many concurrent connections'))
-        
+        return resource_class(self.worker)
         
 
     def get_child_resource(self, path):
