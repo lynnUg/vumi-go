@@ -191,6 +191,7 @@ class TestBulkHTTPWorkerBase(VumiTestCase):
 
     @inlineCallbacks
     def create_conversation(self, message_url, event_url, tokens):
+
         config = {
             'http_api_nostream': {
                 'api_tokens': tokens,
@@ -301,9 +302,9 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
             ['application/json; charset=utf-8'])
         put_msg = json.loads(response.delivered_body)
 
-        # We do not respect the message_id that's been given.
-        self.assertEqual(msg['message_id'], put_msg['message_id'])
-        self.assertEqual(put_msg['to_addr'], msg['to_addr'])
+        self.assertTrue('convkey' in put_msg)
+        self.assertTrue('accesstoken' in put_msg)
+        
 
     @inlineCallbacks
     def test_send_to_with_zero_worker_concurrency(self):

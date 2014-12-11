@@ -105,8 +105,6 @@ class SendToOptions(MsgOptions):
 
 class MessageResource(BaseResource):
 
-    #routing_key = '%(transport_name)s.stream.message.%(conversation_key)s'
-
     def render_PUT(self, request):
         d = Deferred()
         d.addCallback(self.handle_PUT)
@@ -146,19 +144,44 @@ class MessageResource(BaseResource):
         finally:
             self.worker.concurrency_limiter.stop(user_account)
             
-
-   
-
-   
-    def handle_PUT_send_to(self, request, payload):
+    @inlineCallbacks
+    def create_http_conversation(self,request):
+        """
+        Hack on http tokens. Have to be auto-generated in future
+        """
+        config = {
+            'http_api': {
+                'api_tokens': ['token-1','token-2'],
+            }
+        }
+        new_conv_data = {
+            'conversation_type':u'http_api',
+            'description':u'None',
+            'name':u'HTTP API',
+            'config':config,
+        }
         user_account = request.getUser()
+        user_api=yield self.worker.vumi_api.get_user_api(user_account)
+        conv = yield user_api.new_conversation(**new_conv_data)
+        conv.starting()
+        returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
+
+    @inlineCallbacks
+    def handle_send_message(self,message,numbers,conv_key,accesstoken):
+        pass
+
+
+    @inlineCallbacks
+    def handle_PUT_send_to(self, request, payload):
         msg_options = SendToOptions(payload)
         if not msg_options.is_valid:
             self.client_error_response(request, msg_options.error_msg)
             return
-        m = payload  
-        n = json.dumps(m) 
-        self.successful_send_response(request, n)
+        conv_details=yield self.create_http_conversation(request)
+        numbers=payload.get('to_addr')
+        numbers=numbers.split(",") 
+        response= json.dumps(conv_details) 
+        self.successful_send_response(request, response)
 
 
 
