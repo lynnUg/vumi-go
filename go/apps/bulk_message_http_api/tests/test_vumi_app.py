@@ -260,6 +260,8 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
         }
         response = yield http_request_full(url, json.dumps(msg), {},
                                            method='PUT')
+        print response
+        print dir(response)
         self.assertEqual(response.code, http.UNAUTHORIZED)
         self.assertEqual(response.headers.getRawHeaders('www-authenticate'), [
             'basic realm="AccessMobile Messaging Api"'])
@@ -325,9 +327,9 @@ class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
         d = http_request_full(
             url, json.dumps(msg), self.auth_headers, method='PUT',
             timeout=0.2)
-        print "response"
-        print d.delivered_body
-       # yield self.assertFailure(d, HttpTimeoutError)
+
+        #this test weirdly passes without yield but fails with yeild
+        self.assertFailure(d, HttpTimeoutError)
 
     @inlineCallbacks
     def test_in_send_to_with_evil_content(self):
