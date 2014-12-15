@@ -130,12 +130,11 @@ class MessageResource(BaseResource):
 
     @inlineCallbacks
     def handle_PUT(self, request):
-        payload = json.loads(request.content.read())
-        #try:
-            #payload = json.loads(request.content.read())
-        #except ValueError:
-            #self.client_error_response(request, 'Invalid Message for Vumi')
-            #return
+        try:
+            payload = json.loads(request.content.read())
+        except ValueError:
+            self.client_error_response(request, 'Invalid Message for Vumi')
+            return
 
      
         user_account = request.getUser()
