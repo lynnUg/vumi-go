@@ -231,7 +231,7 @@ class AmHTTPWorker(GoApplicationWorker):
 
     def get_api_config(self, conversation, key, default=None):
         return conversation.config.get(
-            'http_api_nostream', {}).get(key, default)
+            'http_api', {}).get(key, default)
 
     @inlineCallbacks
     def consume_user_message(self, message):
