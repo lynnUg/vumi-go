@@ -196,14 +196,14 @@ class ConcurrencyLimitManager(object):
         self._get_limiter(key).stop()
         self._cleanup_limiter(key)
 
-class BulkHTTPWorker(GoApplicationWorker):
+class AmHTTPWorker(GoApplicationWorker):
 
     worker_name = 'bulk_message_http_api_worker'
     CONFIG_CLASS = HTTPWorkerConfig
 
     @inlineCallbacks
     def setup_application(self):
-        yield super(BulkHTTPWorker, self).setup_application()
+        yield super(AmHTTPWorker, self).setup_application()
         config = self.get_static_config()
         self.web_path = config.web_path
         self.web_port = config.web_port
@@ -226,7 +226,7 @@ class BulkHTTPWorker(GoApplicationWorker):
 
     @inlineCallbacks
     def teardown_application(self):
-        yield super(BulkHTTPWorker, self).teardown_application()
+        yield super(AmHTTPWorker, self).teardown_application()
         yield self.webserver.loseConnection()
 
     def get_api_config(self, conversation, key, default=None):

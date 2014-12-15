@@ -14,9 +14,9 @@ from vumi.message import TransportUserMessage, TransportEvent
 from vumi.tests.utils import MockHttpServer, LogCatcher
 from vumi.tests.helpers import VumiTestCase
 
-from go.apps.bulk_message_http_api.vumi_app import (
-    ConcurrencyLimitManager, BulkHTTPWorker)
-from go.apps.bulk_message_http_api.resource import ApiResource
+from go.apps.access_mobile_http_api.vumi_app import (
+    ConcurrencyLimitManager, AmHTTPWorker)
+from go.apps.access_mobile_message_http_api.resource import ApiResource
 from go.apps.tests.helpers import AppWorkerHelper
 
 class TestConcurrencyLimitManager(VumiTestCase):
@@ -143,11 +143,11 @@ class TestConcurrencyLimitManager(VumiTestCase):
         limiter.stop("key-a")
         limiter.stop("key-b")
         self.assertEqual(limiter._concurrency_limiters, {})
-class TestBulkHTTPWorkerBase(VumiTestCase):
+class TestAmHTTPWorkerBase(VumiTestCase):
 
     def setUp(self):
         self.app_helper = self.add_helper(
-            AppWorkerHelper(BulkHTTPWorker))
+            AppWorkerHelper(AmHTTPWorker))
 
     @inlineCallbacks
     def start_app_worker(self, config_overrides={}):
@@ -248,7 +248,7 @@ class TestBulkHTTPWorkerBase(VumiTestCase):
         })
 
 
-class TestBulkHTTPWorker(TestBulkHTTPWorkerBase):
+class TestAmHTTPWorker(TestAmHTTPWorkerBase):
 
     @inlineCallbacks
     def test_missing_auth(self):
