@@ -68,6 +68,9 @@ class AuthorizedResource(resource.Resource):
         return resource.NoResource().render(request)
 
     def getChild(self,conversation_key,request):
+       log.warning("converstion key") 
+       log.warning(conversation_key)
+       log.warning( request)
        myresource = self.resource_class(self.worker)
        checker = PasswordChecker(self.worker,conversation_key)
        realm = HttpPasswordRealm(myresource)
