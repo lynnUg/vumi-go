@@ -16,7 +16,7 @@ from vumi.tests.helpers import VumiTestCase
 
 from go.apps.access_mobile_http_api.vumi_app import (
     ConcurrencyLimitManager, AmHTTPWorker)
-from go.apps.access_mobile_message_http_api.resource import ApiResource
+from go.apps.access_mobile_http_api.resource import ApiResource
 from go.apps.tests.helpers import AppWorkerHelper
 
 class TestConcurrencyLimitManager(VumiTestCase):
