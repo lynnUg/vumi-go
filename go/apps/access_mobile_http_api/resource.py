@@ -131,6 +131,8 @@ class MessageResource(BaseResource):
     @inlineCallbacks
     def handle_PUT(self, request):
         try:
+            log.warning("the content")
+            log.warning(request.content.read())
             payload = json.loads(request.content.read())
         except ValueError:
             self.client_error_response(request, 'Invalid Message for Vumi')
