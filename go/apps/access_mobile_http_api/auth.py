@@ -33,13 +33,16 @@ class PasswordChecker:
         token = credentials.password
         user_exists = yield self.worker.vumi_api.user_exists(username)
         if user_exists:
+            log.warning("user exsits")
             user_api = self.worker.vumi_api.get_user_api(username)
             conversation = yield user_api.get_wrapped_conversation(
                 self.conversation_key)
             if conversation is not None:
+                log.warning("conversation exsits")
                 tokens = self.worker.get_api_config(
                     conversation, 'api_tokens', [])
                 if token in tokens:
+                  log.warning("token exsits")
                   returnValue(username)
             raise credError.UnauthorizedLogin("Bad password")
         else:
