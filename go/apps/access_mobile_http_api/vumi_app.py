@@ -10,9 +10,9 @@ from vumi.utils import http_request_full, HttpTimeoutError
 from vumi.transports.httprpc import httprpc
 from vumi import log
 
-from go.apps.bulk_message_http_api.auth import AuthorizedResource
+from go.apps.access_mobile_http_api.auth import AuthorizedResource
 from go.apps.http_api_nostream.resource import ConversationResource
-from go.apps.bulk_message_http_api.resource import ApiResource
+from go.apps.access_mobile_http_api.resource import ApiResource
 from go.base.utils import extract_auth_from_url
 from go.vumitools.app_worker import GoApplicationWorker
 
