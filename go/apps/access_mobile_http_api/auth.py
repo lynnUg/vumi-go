@@ -33,7 +33,6 @@ class PasswordChecker:
         token = credentials.password
         user_exists = yield self.worker.vumi_api.user_exists(username)
         if user_exists:
-            log.warning("user exsits")
             user_api = self.worker.vumi_api.get_user_api(username)
             conversation = yield user_api.get_wrapped_conversation(
                 self.conversation_key)
@@ -41,9 +40,7 @@ class PasswordChecker:
                 log.warning("conversation exsits")
                 tokens = self.worker.get_api_config(
                     conversation, 'api_tokens', [])
-                log.warning(tokens)
                 if token in tokens:
-                  log.warning("token exsits")
                   returnValue(username)
             raise credError.UnauthorizedLogin("Bad password")
         else:
@@ -72,9 +69,6 @@ class AuthorizedResource(resource.Resource):
         return resource.NoResource().render(request)
 
     def getChild(self,conversation_key,request):
-       log.warning("converstion key") 
-       log.warning(conversation_key)
-       log.warning( request)
        myresource = self.resource_class(self.worker)
        checker = PasswordChecker(self.worker,conversation_key)
        realm = HttpPasswordRealm(myresource)
