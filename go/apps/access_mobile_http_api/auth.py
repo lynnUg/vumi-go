@@ -41,6 +41,7 @@ class PasswordChecker:
                 log.warning("conversation exsits")
                 tokens = self.worker.get_api_config(
                     conversation, 'api_tokens', [])
+                log.warning(tokens)
                 if token in tokens:
                   log.warning("token exsits")
                   returnValue(username)
