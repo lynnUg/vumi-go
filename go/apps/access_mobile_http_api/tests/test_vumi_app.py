@@ -147,7 +147,7 @@ class TestConcurrencyLimitManager(VumiTestCase):
         self.assertEqual(limiter._concurrency_limiters, {})
 
 class TestAmHTTPWorkerBase(VumiTestCase):
-    @inlineCallbacks
+   
     def setUp(self):
         self.app_helper = self.add_helper(
             AppWorkerHelper(AmHTTPWorker))
