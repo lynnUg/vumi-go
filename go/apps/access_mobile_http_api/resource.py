@@ -174,7 +174,7 @@ class MessageResource(BaseResource):
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
     @inlineCallbacks
-    def handle_send_message(self,message,numbers,conv_key,accesstoken,usertoken):
+    def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
         auth_headers = {
             'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
         }
