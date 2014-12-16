@@ -204,7 +204,8 @@ class MessageResource(BaseResource):
         "numbers":numbers,
         "usertoken":usertoken
         }
-        new_send_message.update(**new_send_message)
+        new_send_message.update(conv_details)
+        yield handle_send_message(**new_send_message)
         response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
 
