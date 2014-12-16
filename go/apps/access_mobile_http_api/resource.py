@@ -181,9 +181,8 @@ class MessageResource(BaseResource):
 
     @inlineCallbacks
     def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
-
         log.warning("sedning message via ")
-        yield window_id = convkey
+        window_id = yield convkey
         #for to_addr in numbers:
             #yield self.worker.send_message_via_window( window_id, to_addr, message)
         #auth_headers = {
