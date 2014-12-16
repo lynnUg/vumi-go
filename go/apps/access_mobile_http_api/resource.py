@@ -16,6 +16,7 @@ from twisted.web import static, resource
 
 import string , random
 from time import gmtime, strftime
+from vumi.utils import http_request_full
 class BaseResource(resource.Resource):
 
     def __init__(self, worker):
@@ -173,8 +174,16 @@ class MessageResource(BaseResource):
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
     @inlineCallbacks
-    def handle_send_message(self,message,numbers,conv_key,accesstoken):
-        pass
+    def handle_send_message(self,message,numbers,conv_key,accesstoken,usertoken):
+        auth_headers = {
+            'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
+        }
+        url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
+        conve_key,)
+        for number in numbers:
+            payload = { "to_addr": number, "content": message}
+            response = yield http_request_full(url, json.dumps(payload), auth_headers,
+                                           method='PUT')
 
 
     @inlineCallbacks
@@ -186,8 +195,14 @@ class MessageResource(BaseResource):
         conv_details=yield self.create_http_conversation(request)
         numbers=payload.get('to_addr')
         numbers=numbers.split(",") 
-        response="passed"
-        user_account = request.getUser()
+        message=payload.get('content')
+        usertoken = request.getUser()
+        new_send_message={
+        "message":message,
+        "numbers":numbers,
+        "usertoken":usertoken
+        }
+        new_send_message.update(conv_details)
         response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
 
