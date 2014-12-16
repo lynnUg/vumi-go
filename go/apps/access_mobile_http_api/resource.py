@@ -13,6 +13,8 @@ from vumi import log
 from go.vumitools.utils import MessageMetadataHelper
 
 from twisted.web import static, resource
+
+import string , random
 class BaseResource(resource.Resource):
 
     def __init__(self, worker):
@@ -131,10 +133,7 @@ class MessageResource(BaseResource):
     @inlineCallbacks
     def handle_PUT(self, request):
         try:
-            log.warning("the content")
             content=request.content.read()
-            #log.warning(request.content.read())
-            log.warning(type(content))
             payload = json.loads(content)
         except ValueError:
             self.client_error_response(request, 'Invalid Message for Vumi')
@@ -155,16 +154,17 @@ class MessageResource(BaseResource):
         """
         config = {
             'http_api': {
-                'api_tokens': ['token-1','token-2'],
+                'api_tokens': [''.join(random.sample(string.letters*5,5)),''.join(random.sample(string.letters*5,5))],
             }
         }
+        user_account = request.getUser()
         new_conv_data = {
             'conversation_type':u'http_api',
             'description':u'None',
-            'name':u'HTTP API',
+            'name':user_account.first_name+''.join(random.sample(string.letters*5,5)),
             'config':config,
         }
-        user_account = request.getUser()
+        
         user_api=yield self.worker.vumi_api.get_user_api(user_account)
         conv = yield user_api.new_conversation(**new_conv_data)
         conv.starting()

@@ -37,7 +37,6 @@ class PasswordChecker:
             conversation = yield user_api.get_wrapped_conversation(
                 self.conversation_key)
             if conversation is not None:
-                log.warning("conversation exsits")
                 tokens = self.worker.get_api_config(
                     conversation, 'api_tokens', [])
                 if token in tokens:
