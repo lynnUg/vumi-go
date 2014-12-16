@@ -227,13 +227,13 @@ class AmHTTPWorker(GoApplicationWorker):
         ], self.web_port)
         wm_redis = self.redis.sub_manager('%s:window_manager' % (
             self.worker_name,))
-        self.window_manager = WindowManager(wm_redis,
-            window_size=self.max_ack_window,
-            flight_lifetime=self.max_ack_wait)
-        self.window_manager.monitor(self.on_window_key_ready,
-            interval=self.monitor_interval,
-            cleanup=self.monitor_window_cleanup,
-            cleanup_callback=self.on_window_cleanup)
+        #self.window_manager = WindowManager(wm_redis,
+            #window_size=self.max_ack_window,
+            #flight_lifetime=self.max_ack_wait)
+        #self.window_manager.monitor(self.on_window_key_ready,
+            #interval=self.monitor_interval,
+            #cleanup=self.monitor_window_cleanup,
+            #cleanup_callback=self.on_window_cleanup)
 
     def get_conversation_resource(self):
         return AuthorizedResource(self,ApiResource)
