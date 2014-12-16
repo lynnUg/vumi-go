@@ -186,6 +186,7 @@ class MessageResource(BaseResource):
         numbers=numbers.split(",") 
         response="passed"
         user_account = request.getUser()
+        log.warning(user_account)
         log.warning(dir(user_account))
         #response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
