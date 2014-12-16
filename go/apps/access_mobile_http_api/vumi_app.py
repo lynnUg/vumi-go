@@ -15,6 +15,7 @@ from go.apps.http_api_nostream.resource import ConversationResource
 from go.apps.access_mobile_http_api.resource import ApiResource
 from go.base.utils import extract_auth_from_url
 from go.vumitools.app_worker import GoApplicationWorker
+from vumi.components.window_manager import WindowManager
 
 
 # NOTE: Things in this module are subclassed and used by go.apps.http_api.
@@ -200,6 +201,10 @@ class AmHTTPWorker(GoApplicationWorker):
 
     worker_name = 'bulk_message_http_api_worker'
     CONFIG_CLASS = HTTPWorkerConfig
+    max_ack_window = 100
+    max_ack_wait = 100
+    monitor_interval = 20
+    monitor_window_cleanup = True
 
     @inlineCallbacks
     def setup_application(self):
@@ -220,6 +225,15 @@ class AmHTTPWorker(GoApplicationWorker):
             (self.get_conversation_resource(), self.web_path),
             (httprpc.HttpRpcHealthResource(self), self.health_path),
         ], self.web_port)
+        wm_redis = self.redis.sub_manager('%s:window_manager' % (
+            self.worker_name,))
+        self.window_manager = WindowManager(wm_redis,
+            window_size=self.max_ack_window,
+            flight_lifetime=self.max_ack_wait)
+        self.window_manager.monitor(self.on_window_key_ready,
+            interval=self.monitor_interval,
+            cleanup=self.monitor_window_cleanup,
+            cleanup_callback=self.on_window_cleanup)
 
     def get_conversation_resource(self):
         return AuthorizedResource(self,ApiResource)
@@ -233,9 +247,27 @@ class AmHTTPWorker(GoApplicationWorker):
         return conversation.config.get(
             'http_api', {}).get(key, default)
 
+    def on_window_cleanup(self, window_id):
+        log.info('Finished window %s, removing.' % (window_id,))
+
+    @inlineCallbacks
+    def on_window_key_ready(self, window_id, flight_key):
+        data = yield self.window_manager.get_data(window_id, flight_key)
+        to_addr = data['to_addr']
+        content = data['content']
+        # yield self.window_manager.set_external_id(window_id, flight_key,
+           # msg['message_id'])
+    @inlineCallbacks
+    def send_message_via_window(self, window_id, to_addr, content):
+        yield self.window_manager.create_window(window_id, strict=False)
+        yield self.window_manager.add(window_id, {
+            'to_addr': to_addr,
+            'content': content,
+            })
+
     @inlineCallbacks
     def consume_user_message(self, message):
-       log.warning("consuming message ")
+      pass
 
     def send_message_to_client(self, message, conversation, push_url):
         if push_url is None:

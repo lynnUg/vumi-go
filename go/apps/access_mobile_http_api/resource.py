@@ -110,6 +110,10 @@ class SendToOptions(MsgOptions):
 
 
 class MessageResource(BaseResource):
+    max_ack_window = 100
+    max_ack_wait = 100
+    monitor_interval = 20
+    monitor_window_cleanup = True
 
     def render_PUT(self, request):
         d = Deferred()
@@ -177,15 +181,18 @@ class MessageResource(BaseResource):
 
     @inlineCallbacks
     def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
-        auth_headers = {
-            'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
-        }
-        url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
-        convkey,)
-        for number in numbers:
-            payload = { "to_addr": number, "content": message}
-            response = yield http_request_full(url, json.dumps(payload), auth_headers,
-                                           method='PUT')
+        window_id = convkey
+        for to_addr in numbers:
+            yield self.worker.send_message_via_window( window_id, to_addr, message)
+        #auth_headers = {
+            #'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
+        #}
+        #url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
+        #convkey,)
+        #for number in numbers:
+            #payload = { "to_addr": number, "content": message}
+            #response = yield http_request_full(url, json.dumps(payload), auth_headers,
+                                           #method='PUT')
 
 
     @inlineCallbacks
