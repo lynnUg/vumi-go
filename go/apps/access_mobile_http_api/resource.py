@@ -110,10 +110,7 @@ class SendToOptions(MsgOptions):
 
 
 class MessageResource(BaseResource):
-    max_ack_window = 100
-    max_ack_wait = 100
-    monitor_interval = 20
-    monitor_window_cleanup = True
+
 
     def render_PUT(self, request):
         d = Deferred()
