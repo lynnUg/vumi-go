@@ -310,7 +310,7 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
         import random
         yield self.start_app_worker()
         to_addr=""
-        for i in range(0,500):
+        for i in range(0,2):
             to_addr +=''.join(random.sample("1234567890"*5,10))+","
         msg = {
             'to_addr': to_addr,
