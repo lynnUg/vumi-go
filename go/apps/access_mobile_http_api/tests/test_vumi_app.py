@@ -193,7 +193,7 @@ class TestAmHTTPWorkerBase(VumiTestCase):
     def create_conversation(self, message_url, event_url, tokens):
 
         config = {
-            'http_api_nostream': {
+            'http_api': {
                 'api_tokens': tokens,
                 'push_message_url': message_url,
                 'push_event_url': event_url,
