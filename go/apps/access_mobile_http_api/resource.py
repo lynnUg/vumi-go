@@ -135,7 +135,7 @@ class MessageResource(BaseResource):
             content=request.content.read()
             #log.warning(request.content.read())
             log.warning(type(content))
-            payload = json.loads(request.content.read())
+            payload = json.loads(content)
         except ValueError:
             self.client_error_response(request, 'Invalid Message for Vumi')
             return
