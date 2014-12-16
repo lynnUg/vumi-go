@@ -19,6 +19,7 @@ from go.apps.access_mobile_http_api.vumi_app import (
 from go.apps.access_mobile_http_api.resource import ApiResource
 from go.apps.tests.helpers import AppWorkerHelper
 from vumi.components.window_manager import WindowManager
+from twisted.internet.task import Clock
 
 class TestConcurrencyLimitManager(VumiTestCase):
     def test_concurrency_limiter_no_limit(self):
@@ -144,7 +145,7 @@ class TestConcurrencyLimitManager(VumiTestCase):
         limiter.stop("key-a")
         limiter.stop("key-b")
         self.assertEqual(limiter._concurrency_limiters, {})
-        
+
 class TestAmHTTPWorkerBase(VumiTestCase):
     @inlineCallbacks
     def setUp(self):
