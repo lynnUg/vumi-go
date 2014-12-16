@@ -181,7 +181,7 @@ class MessageResource(BaseResource):
             'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
         }
         url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
-        conve_key,)
+        convkey,)
         for number in numbers:
             log.warning("sending message")
             log.warning(number)
