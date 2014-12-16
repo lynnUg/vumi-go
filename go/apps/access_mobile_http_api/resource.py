@@ -183,8 +183,6 @@ class MessageResource(BaseResource):
         url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
         convkey,)
         for number in numbers:
-            log.warning("sending message")
-            log.warning(number)
             payload = { "to_addr": number, "content": message}
             response = yield http_request_full(url, json.dumps(payload), auth_headers,
                                            method='PUT')
