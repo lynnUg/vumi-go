@@ -15,6 +15,8 @@ from go.vumitools.utils import MessageMetadataHelper
 from twisted.web import static, resource
 
 import string , random
+import base64
+
 from time import gmtime, strftime
 from vumi.utils import http_request_full
 class BaseResource(resource.Resource):
