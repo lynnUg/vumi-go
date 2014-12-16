@@ -15,6 +15,7 @@ from go.vumitools.utils import MessageMetadataHelper
 from twisted.web import static, resource
 
 import string , random
+from time import gmtime, strftime
 class BaseResource(resource.Resource):
 
     def __init__(self, worker):
@@ -161,7 +162,7 @@ class MessageResource(BaseResource):
         new_conv_data = {
             'conversation_type':u'http_api',
             'description':u'None',
-            'name':user_account.first_name+''.join(random.sample(string.letters*5,5)),
+            'name':'Conversation_'+strftime("%Y-%m-%d %H:%M:%S", gmtime()),
             'config':config,
         }
         
@@ -181,14 +182,12 @@ class MessageResource(BaseResource):
         if not msg_options.is_valid:
             self.client_error_response(request, msg_options.error_msg)
             return
-        #conv_details=yield self.create_http_conversation(request)
+        conv_details=yield self.create_http_conversation(request)
         numbers=payload.get('to_addr')
         numbers=numbers.split(",") 
         response="passed"
         user_account = request.getUser()
-        log.warning(user_account)
-        log.warning(dir(user_account))
-        #response= json.dumps(conv_details) 
+        response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
 
 
