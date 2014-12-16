@@ -304,6 +304,32 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
 
         self.assertTrue('convkey' in put_msg)
         self.assertTrue('accesstoken' in put_msg)
+
+     @inlineCallbacks
+    def test_send_to_large(self):
+        import random
+        yield self.start_app_worker()
+        to_addr=""
+        for i in range(0,2000):
+            to_addr +=''.join(random.sample("1234567890"*5,10))+","
+        msg = {
+            'to_addr': to_addr,
+            'content': 'foo',
+            'message_id': 'evil_id',
+        }
+
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
+        response = yield http_request_full(url, json.dumps(msg),
+                                           self.auth_headers, method='PUT')
+
+        self.assertEqual(response.code, http.OK)
+        self.assertEqual(
+            response.headers.getRawHeaders('content-type'),
+            ['application/json; charset=utf-8'])
+        put_msg = json.loads(response.delivered_body)
+
+        self.assertTrue('convkey' in put_msg)
+        self.assertTrue('accesstoken' in put_msg)
         
 
     @inlineCallbacks
