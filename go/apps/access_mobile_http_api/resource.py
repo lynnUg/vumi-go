@@ -181,6 +181,7 @@ class MessageResource(BaseResource):
         log.warning("sedning message via ")
         window_id = yield convkey
         for to_addr in numbers:
+            log.warning(to_addr)
             yield self.worker.send_message_via_window( window_id, to_addr, message)
         #auth_headers = {
             #'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
