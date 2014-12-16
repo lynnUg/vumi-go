@@ -152,7 +152,6 @@ class TestAmHTTPWorkerBase(VumiTestCase):
         self.app_helper = self.add_helper(
             AppWorkerHelper(AmHTTPWorker))
         
-
         
 
     def _setup_wait_for_window_monitor(self):
