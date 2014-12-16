@@ -151,12 +151,9 @@ class TestAmHTTPWorkerBase(VumiTestCase):
     def setUp(self):
         self.app_helper = self.add_helper(
             AppWorkerHelper(AmHTTPWorker))
-         # Patch the clock so we can control time
-        self.clock = Clock()
-        self.patch(WindowManager, 'get_clock', lambda _: self.clock)
+        
 
-        self.app = yield self.app_helper.get_app_worker({})
-        self._setup_wait_for_window_monitor()
+        
 
     def _setup_wait_for_window_monitor(self):
         # Hackery to wait for the window manager on the app.
@@ -190,6 +187,9 @@ class TestAmHTTPWorkerBase(VumiTestCase):
             'metrics_prefix': 'metrics_prefix.',
         }
         self.config.update(config_overrides)
+         # Patch the clock so we can control time
+        self.clock = Clock()
+        self.patch(WindowManager, 'get_clock', lambda _: self.clock)
         self.app = yield self.app_helper.get_app_worker(self.config)
         self.addr = self.app.webserver.getHost()
         self.url = 'http://%s:%s%s' % (
