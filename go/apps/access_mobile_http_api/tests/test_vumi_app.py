@@ -18,6 +18,7 @@ from go.apps.access_mobile_http_api.vumi_app import (
     ConcurrencyLimitManager, AmHTTPWorker)
 from go.apps.access_mobile_http_api.resource import ApiResource
 from go.apps.tests.helpers import AppWorkerHelper
+from vumi.components.window_manager import WindowManager
 
 class TestConcurrencyLimitManager(VumiTestCase):
     def test_concurrency_limiter_no_limit(self):
@@ -148,6 +149,35 @@ class TestAmHTTPWorkerBase(VumiTestCase):
     def setUp(self):
         self.app_helper = self.add_helper(
             AppWorkerHelper(AmHTTPWorker))
+         # Patch the clock so we can control time
+        self.clock = Clock()
+        self.patch(WindowManager, 'get_clock', lambda _: self.clock)
+
+        self.app = yield self.app_helper.get_app_worker({})
+        self._setup_wait_for_window_monitor()
+
+    def _setup_wait_for_window_monitor(self):
+        # Hackery to wait for the window manager on the app.
+        self._wm_state = {
+            'queue': DeferredQueue(),
+            'expected': 0,
+        }
+        orig = self.app.window_manager._monitor_windows
+
+        @inlineCallbacks
+        def monitor_wrapper(*args, **kw):
+            self._wm_state['expected'] += 1
+            yield orig(*args, **kw)
+            self._wm_state['queue'].put(object())
+
+        self.patch(
+            self.app.window_manager, '_monitor_windows', monitor_wrapper)
+
+    @inlineCallbacks
+    def wait_for_window_monitor(self):
+        while self._wm_state['expected'] > 0:
+            yield self._wm_state['queue'].get()
+            self._wm_state['expected'] -= 1
 
     @inlineCallbacks
     def start_app_worker(self, config_overrides={}):
@@ -310,7 +340,7 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
         import random
         yield self.start_app_worker()
         to_addr=""
-        for i in range(0,500):
+        for i in range(0,00):
             to_addr +=''.join(random.sample("1234567890"*5,10))+","
         msg = {
             'to_addr': to_addr,
