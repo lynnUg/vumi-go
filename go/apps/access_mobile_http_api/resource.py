@@ -175,7 +175,7 @@ class MessageResource(BaseResource):
         pass
 
 
-    @inlineCallbacks
+    #@inlineCallbacks
     def handle_PUT_send_to(self, request, payload):
         msg_options = SendToOptions(payload)
         if not msg_options.is_valid:
