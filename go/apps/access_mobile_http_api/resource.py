@@ -132,7 +132,9 @@ class MessageResource(BaseResource):
     def handle_PUT(self, request):
         try:
             log.warning("the content")
-            log.warning(request.content.read())
+            content=request.content.read()
+            #log.warning(request.content.read())
+            log.warning(type(content))
             payload = json.loads(request.content.read())
         except ValueError:
             self.client_error_response(request, 'Invalid Message for Vumi')
