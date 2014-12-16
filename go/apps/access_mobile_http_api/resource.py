@@ -140,7 +140,7 @@ class MessageResource(BaseResource):
             self.client_error_response(request, 'Invalid Message for Vumi')
             return
 
-     
+        log.warning("working")
         user_account = request.getUser()
         d = self.worker.concurrency_limiter.start(user_account)
         try:
@@ -176,7 +176,7 @@ class MessageResource(BaseResource):
         pass
 
 
-    #@inlineCallbacks
+    @inlineCallbacks
     def handle_PUT_send_to(self, request, payload):
         msg_options = SendToOptions(payload)
         if not msg_options.is_valid:
