@@ -159,10 +159,11 @@ class MessageResource(BaseResource):
             }
         }
         user_account = request.getUser()
+        conv_name='Conversation_'+strftime("%Y-%m-%d %H:%M:%S", gmtime())
         new_conv_data = {
             'conversation_type':u'http_api',
             'description':u'None',
-            'name':'Conversation_'+strftime("%Y-%m-%d %H:%M:%S", gmtime()),
+            'name':unicode(conv_name),
             'config':config,
         }
         
