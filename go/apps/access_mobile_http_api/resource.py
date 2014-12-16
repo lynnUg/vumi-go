@@ -184,7 +184,10 @@ class MessageResource(BaseResource):
         conv_details=yield self.create_http_conversation(request)
         numbers=payload.get('to_addr')
         numbers=numbers.split(",") 
-        response= json.dumps(conv_details) 
+        response="passed"
+        user_account = request.getUser()
+        log.warning(dir(user_account))
+        #response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
 
 
