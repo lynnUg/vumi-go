@@ -181,10 +181,11 @@ class MessageResource(BaseResource):
 
     @inlineCallbacks
     def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
-        log.warning("sedning message via window")
-        window_id = convkey
-        for to_addr in numbers:
-            yield self.worker.send_message_via_window( window_id, to_addr, message)
+
+        log.warning("sedning message via ")
+        yield window_id = convkey
+        #for to_addr in numbers:
+            #yield self.worker.send_message_via_window( window_id, to_addr, message)
         #auth_headers = {
             #'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
         #}
@@ -215,7 +216,7 @@ class MessageResource(BaseResource):
         new_send_message.update(conv_details)
         yield self.handle_send_message(**new_send_message)
         response= json.dumps(conv_details) 
-        #self.successful_send_response(request, response)
+        self.successful_send_response(request, response)
 
 
 
