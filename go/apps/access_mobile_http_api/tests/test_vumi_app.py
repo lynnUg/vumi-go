@@ -305,7 +305,7 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
         self.assertTrue('convkey' in put_msg)
         self.assertTrue('accesstoken' in put_msg)
 
-     @inlineCallbacks
+    @inlineCallbacks
     def test_send_to_large(self):
         import random
         yield self.start_app_worker()
