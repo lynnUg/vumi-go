@@ -181,7 +181,7 @@ class MessageResource(BaseResource):
         if not msg_options.is_valid:
             self.client_error_response(request, msg_options.error_msg)
             return
-        conv_details=yield self.create_http_conversation(request)
+        #conv_details=yield self.create_http_conversation(request)
         numbers=payload.get('to_addr')
         numbers=numbers.split(",") 
         response="passed"
