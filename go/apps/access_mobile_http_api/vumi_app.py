@@ -256,6 +256,7 @@ class AmHTTPWorker(GoApplicationWorker):
         data = yield self.window_manager.get_data(window_id, flight_key)
         to_addr = data['to_addr']
         content = data['content']
+        log.warning(to_addr)
         # yield self.window_manager.set_external_id(window_id, flight_key,
            # msg['message_id'])
     @inlineCallbacks
@@ -266,67 +267,8 @@ class AmHTTPWorker(GoApplicationWorker):
             'content': content,
             })
 
-    @inlineCallbacks
-    def consume_user_message(self, message):
-      pass
+   
 
-    def send_message_to_client(self, message, conversation, push_url):
-        if push_url is None:
-            log.warning(
-                "push_message_url not configured for conversation: %s" % (
-                    conversation.key))
-            return
-        return self.push(push_url, message)
+    
 
-    @inlineCallbacks
-    def consume_unknown_event(self, event):
-        log.warning("consuming event ")
-      
-
-    def send_event_to_client(self, event, conversation, push_url):
-        if push_url is None:
-            log.info(
-                "push_event_url not configured for conversation: %s" % (
-                    conversation.key))
-            return
-        return self.push(push_url, event)
-
-    @inlineCallbacks
-    def push(self, url, vumi_message):
-        config = self.get_static_config()
-        data = vumi_message.to_json().encode('utf-8')
-        try:
-            auth, url = extract_auth_from_url(url.encode('utf-8'))
-            headers = {
-                'Content-Type': 'application/json; charset=utf-8',
-            }
-            if auth is not None:
-                username, password = auth
-
-                if username is None:
-                    username = ''
-
-                if password is None:
-                    password = ''
-
-                headers.update({
-                    'Authorization': 'Basic %s' % (
-                        base64.b64encode('%s:%s' % (username, password)),)
-                })
-            resp = yield http_request_full(
-                url, data=data, headers=headers, timeout=config.timeout)
-            if not (200 <= resp.code < 300):
-                # We didn't get a 2xx response.
-                log.warning('Got unexpected response code %s from %s' % (
-                    resp.code, url))
-        except SchemeNotSupported:
-            log.warning('Unsupported scheme for URL: %s' % (url,))
-        except HttpTimeoutError:
-            log.warning("Timeout pushing message to %s" % (url,))
-        except DNSLookupError:
-            log.warning("DNS lookup error pushing message to %s" % (url,))
-        except ConnectionRefusedError:
-            log.warning("Connection refused pushing message to %s" % (url,))
-
-    def get_health_response(self):
-        return "OK"
+   
