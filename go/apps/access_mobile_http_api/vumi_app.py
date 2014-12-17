@@ -254,6 +254,7 @@ class AmHTTPWorker(GoApplicationWorker):
     def on_window_key_ready(self, window_id, flight_key):
         data = yield self.window_manager.get_data(window_id, flight_key)
         log.warning("processing message")
+        log.warning(data)
         try:
             to_addr = data['to_addr']
             content = data['content']
