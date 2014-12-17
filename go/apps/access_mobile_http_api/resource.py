@@ -179,6 +179,7 @@ class MessageResource(BaseResource):
     def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
         window_id = yield convkey
         for to_addr in numbers:
+            log.warning("sending via window")
             yield self.worker.send_message_via_window( window_id, to_addr, message,convkey,usertoken,accesstoken)
         
 

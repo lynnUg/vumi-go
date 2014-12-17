@@ -253,7 +253,7 @@ class AmHTTPWorker(GoApplicationWorker):
     @inlineCallbacks
     def on_window_key_ready(self, window_id, flight_key):
         data = yield self.window_manager.get_data(window_id, flight_key)
-        log.warning(data)
+        log.warning("processing message")
         to_addr = data['to_addr']
         content = data['content']
         convkey = data['convkey']
@@ -272,6 +272,7 @@ class AmHTTPWorker(GoApplicationWorker):
             msg['message_id'])
     @inlineCallbacks
     def send_message_via_window(self, window_id, to_addr, content,convkey,usertoken,accesstoken):
+        log.warning("adding to window")
         yield self.window_manager.create_window(window_id, strict=False)
         yield self.window_manager.add(window_id, {
             'to_addr': to_addr,
