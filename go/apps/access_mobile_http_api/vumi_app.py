@@ -273,7 +273,8 @@ class AmHTTPWorker(GoApplicationWorker):
             yield self.window_manager.set_external_id(window_id, flight_key,
             msg['message_id'])
 
-        except:
+        except Exception as e:
+            log.warning(e.message)
             log.warning("execption happened")
         
     @inlineCallbacks
