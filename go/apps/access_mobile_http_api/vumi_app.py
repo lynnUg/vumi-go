@@ -252,19 +252,28 @@ class AmHTTPWorker(GoApplicationWorker):
 
     @inlineCallbacks
     def on_window_key_ready(self, window_id, flight_key):
-        log.warning("processing message")
         data = yield self.window_manager.get_data(window_id, flight_key)
         to_addr = data['to_addr']
         content = data['content']
-        log.warning(to_addr)
-        # yield self.window_manager.set_external_id(window_id, flight_key,
-           # msg['message_id'])
+        convkey = data['convkey']
+        auth_headers = {
+            'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
+        }
+        url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
+        convkey,)
+        
+        payload = { "to_addr": to_addr "content": content}
+        msg = yield http_request_full(url, json.dumps(payload), auth_headers,
+                                           method='PUT')
+        yield self.window_manager.set_external_id(window_id, flight_key,
+            msg['message_id'])
     @inlineCallbacks
-    def send_message_via_window(self, window_id, to_addr, content):
+    def send_message_via_window(self, window_id, to_addr, content,convkey):
         yield self.window_manager.create_window(window_id, strict=False)
         yield self.window_manager.add(window_id, {
             'to_addr': to_addr,
             'content': content,
+            'convkey': convkey,
             })
 
    

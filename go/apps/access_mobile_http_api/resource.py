@@ -144,7 +144,6 @@ class MessageResource(BaseResource):
             self.client_error_response(request, 'Invalid Message for Vumi')
             return
 
-        log.warning("working")
         user_account = request.getUser()
         d = self.worker.concurrency_limiter.start(user_account)
         try:
@@ -178,20 +177,10 @@ class MessageResource(BaseResource):
 
     @inlineCallbacks
     def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
-        log.warning("sedning message via ")
         window_id = yield convkey
         for to_addr in numbers:
-            log.warning(to_addr)
-            yield self.worker.send_message_via_window( window_id, to_addr, message)
-        #auth_headers = {
-            #'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
-        #}
-        #url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
-        #convkey,)
-        #for number in numbers:
-            #payload = { "to_addr": number, "content": message}
-            #response = yield http_request_full(url, json.dumps(payload), auth_headers,
-                                           #method='PUT')
+            yield self.worker.send_message_via_window( window_id, to_addr, message,convkey)
+        
 
 
     @inlineCallbacks
