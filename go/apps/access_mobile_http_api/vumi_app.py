@@ -1,6 +1,6 @@
 # -*- test-case-name: go.apps.http_api_nostream.tests.test_vumi_app -*-
 import base64
-import json
+import json ,requests
 from twisted.internet.defer import inlineCallbacks, Deferred, succeed
 from twisted.internet.error import DNSLookupError, ConnectionRefusedError
 from twisted.web.error import SchemeNotSupported
@@ -264,12 +264,13 @@ class AmHTTPWorker(GoApplicationWorker):
             auth_headers = {
                 'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
                 }
+
             url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
                 convkey,)
         
             payload = { "to_addr": to_addr ,"content": content}
-            msg = yield http_request_full(url, json.dumps(payload), auth_headers,
-                                           method='PUT')
+            msg=requests.put(message_url, auth=(usertoken, accesstoken),
+              data=json.dumps(payload))
             yield self.window_manager.set_external_id(window_id, flight_key,
             msg['message_id'])
 
