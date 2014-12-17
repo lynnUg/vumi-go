@@ -1,6 +1,6 @@
 # -*- test-case-name: go.apps.http_api_nostream.tests.test_vumi_app -*-
 import base64
-
+import json
 from twisted.internet.defer import inlineCallbacks, Deferred, succeed
 from twisted.internet.error import DNSLookupError, ConnectionRefusedError
 from twisted.web.error import SchemeNotSupported
