@@ -271,8 +271,9 @@ class AmHTTPWorker(GoApplicationWorker):
             payload = { "to_addr": to_addr ,"content": content}
             msg=requests.put(url, auth=(usertoken, accesstoken),
               data=json.dumps(payload))
-            yield self.window_manager.set_external_id(window_id, flight_key,
-            msg['message_id'])
+            log.warning(dir(msg))
+            #yield self.window_manager.set_external_id(window_id, flight_key,
+            #msg['message_id'])
 
         except Exception as e:
             log.warning(e.message)
