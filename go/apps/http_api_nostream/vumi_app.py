@@ -264,7 +264,8 @@ class NoStreamingHTTPWorker(GoApplicationWorker):
             log.warning('Unable to find message %s for event %s.' % (
                 event['user_message_id'], event['event_id']))
 
-        config = yield self.get_message_config(event)
+        #config = yield self.get_message_config(event)
+        config = yield self.get_message_config(outbound_message)
         conversation = config.conversation
         ignore = self.get_api_config(conversation, 'ignore_events', False)
         if not ignore:
