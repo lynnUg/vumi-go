@@ -414,11 +414,8 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
             response, "Invalid or missing value for payload key 'to_addr'")
     @inlineCallbacks
     def test_get_status(self):
-        yield self.start_app_worker()
         msg = {
-            'to_addr': '+2345',
-            'content': 'foo',
-            'message_id': 'evil_id',
+            'get_status': self.conversation.key,
         }
 
         url = '%s/%s/messages.json' % (self.url, self.conversation.key)
@@ -430,7 +427,8 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
             response.headers.getRawHeaders('content-type'),
             ['application/json; charset=utf-8'])
         put_msg = json.loads(response.delivered_body)
-        
+
+        print put_msg
 
    
 
