@@ -412,7 +412,40 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
                                            self.auth_headers, method='PUT')
         self.assert_bad_request(
             response, "Invalid or missing value for payload key 'to_addr'")
+    @inlineCallbacks
+    def test_get_status(self):
+        yield self.start_app_worker()
+        msg = {
+            'to_addr': '+2345',
+            'content': 'foo',
+            'message_id': 'evil_id',
+        }
 
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
+        response = yield http_request_full(url, json.dumps(msg),
+                                           self.auth_headers, method='PUT')
+
+        self.assertEqual(response.code, http.OK)
+        self.assertEqual(
+            response.headers.getRawHeaders('content-type'),
+            ['application/json; charset=utf-8'])
+        put_msg = json.loads(response.delivered_body)
+        conv_key=put_msg.get("convkey")
+        msg = {
+            'get_status': conv_key,
+        }
+
+        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
+        response = yield http_request_full(url, json.dumps(msg),
+                                           self.auth_headers, method='PUT')
+
+        self.assertEqual(response.code, http.OK)
+        self.assertEqual(
+            response.headers.getRawHeaders('content-type'),
+            ['application/json; charset=utf-8'])
+        put_msg = json.loads(response.delivered_body)
+
+        print put_msg
 
    
 

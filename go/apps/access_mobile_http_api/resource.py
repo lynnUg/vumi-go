@@ -107,7 +107,13 @@ class SendToOptions(MsgOptions):
         'content': MsgCheckHelpers.is_unicode_or_none,
         'to_addr': MsgCheckHelpers.is_unicode_or_none,
     }
+class GetStatusOptions(MsgOptions):
+     """Payload options for messages sent with `.get_status(...)`."""
 
+    WHITELIST = {
+        'get_status': MsgCheckHelpers.is_unicode_or_none,
+        
+    }
 
 class MessageResource(BaseResource):
 
@@ -147,7 +153,10 @@ class MessageResource(BaseResource):
         user_account = request.getUser()
         d = self.worker.concurrency_limiter.start(user_account)
         try:
-             yield self.handle_PUT_send_to(request, payload)
+             if payload.get('get_status'):
+                yield self.handle_get_status(request,payload)
+            else :
+                yield self.handle_PUT_send_to(request, payload)
         finally:
             self.worker.concurrency_limiter.stop(user_account)
             
@@ -204,6 +213,19 @@ class MessageResource(BaseResource):
         yield self.handle_send_message(**new_send_message)
         response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
+
+    @inlineCallbacks
+    def handle_get_status(self,request,payload):
+        msg_options=GetStatusOptions(payload)
+        if not msg_options.is_valid:
+            self.client_error_response(request,msg_options.error_msg)
+            return
+        user_account = request.getUser()
+        conv_key=payload.get('conv_key')
+        conv=self.get_conversation(user_account,conv_key)
+        status=conv.get_progress_status()
+        response=json.dumps(status)
+        self.successful_send_response(request,response)
 
 
 

@@ -18,11 +18,11 @@ from go.vumitools.app_worker import GoApplicationWorker
 from vumi.components.window_manager import WindowManager
 
 
-# NOTE: Things in this module are subclassed and used by go.apps.http_api.
+
 
 
 class HTTPWorkerConfig(GoApplicationWorker.CONFIG_CLASS):
-    """Configuration options for StreamingHTTPWorker."""
+    """Configuration options for AccessHTTPWorker."""
 
     web_path = ConfigText(
         "The path the HTTP worker should expose the API on.",
@@ -253,8 +253,6 @@ class AmHTTPWorker(GoApplicationWorker):
     @inlineCallbacks
     def on_window_key_ready(self, window_id, flight_key):
         data = yield self.window_manager.get_data(window_id, flight_key)
-        log.warning("processing message")
-        log.warning(data)
         try:
             to_addr = data['to_addr']
             content = data['content']
