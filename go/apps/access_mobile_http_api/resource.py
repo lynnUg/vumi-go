@@ -221,7 +221,7 @@ class MessageResource(BaseResource):
             return
         user_account = request.getUser()
         conv_key=payload.get('conv_key')
-        conv=self.get_conversation(user_account,conv_key)
+        conv=yield self.get_conversation(user_account,conv_key)
         dir(conv)
         status=""
         #status=conv.get_progress_status()
