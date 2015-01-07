@@ -108,8 +108,7 @@ class SendToOptions(MsgOptions):
         'to_addr': MsgCheckHelpers.is_unicode_or_none,
     }
 class GetStatusOptions(MsgOptions):
-     """Payload options for messages sent with `.get_status(...)`."""
-
+    """Payload options for messages sent with `.get_status(...)`."""
     WHITELIST = {
         'get_status': MsgCheckHelpers.is_unicode_or_none,
         
