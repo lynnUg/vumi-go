@@ -414,6 +414,7 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
             response, "Invalid or missing value for payload key 'to_addr'")
     @inlineCallbacks
     def test_get_status(self):
+        yield self.start_app_worker()
         msg = {
             'get_status': self.conversation.key,
         }
