@@ -430,22 +430,7 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
             response.headers.getRawHeaders('content-type'),
             ['application/json; charset=utf-8'])
         put_msg = json.loads(response.delivered_body)
-        conv_key=put_msg.get("convkey")
-        msg = {
-            'get_status': conv_key,
-        }
-
-        url = '%s/%s/messages.json' % (self.url, self.conversation.key)
-        response = yield http_request_full(url, json.dumps(msg),
-                                           self.auth_headers, method='PUT')
-
-        self.assertEqual(response.code, http.OK)
-        self.assertEqual(
-            response.headers.getRawHeaders('content-type'),
-            ['application/json; charset=utf-8'])
-        put_msg = json.loads(response.delivered_body)
-
-        print put_msg
+        
 
    
 
