@@ -220,7 +220,7 @@ class MessageResource(BaseResource):
             self.client_error_response(request,msg_options.error_msg)
             return
         user_account = request.getUser()
-        conv_key=payload.get('conv_key')
+        conv_key=payload.get('get_status')
         conv=yield self.get_conversation(user_account,conv_key)
         dir(conv)
         status=""
