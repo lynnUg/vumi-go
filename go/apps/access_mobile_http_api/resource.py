@@ -222,9 +222,7 @@ class MessageResource(BaseResource):
         user_account = request.getUser()
         conv_key=payload.get('get_status')
         conv=yield self.get_conversation(user_account,conv_key)
-        dir(conv)
-        status=""
-        #status=conv.get_progress_status()
+        status=conv.get_progress_status()
         response=json.dumps(status)
         self.successful_send_response(request,response)
 
