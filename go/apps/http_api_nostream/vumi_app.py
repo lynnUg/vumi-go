@@ -263,14 +263,17 @@ class NoStreamingHTTPWorker(GoApplicationWorker):
         if outbound_message is None:
             log.warning('Unable to find message %s for event %s.' % (
                 event['user_message_id'], event['event_id']))
+        try:
 
-        #config = yield self.get_message_config(event)
-        config = yield self.get_message_config(outbound_message)
-        conversation = config.conversation
-        ignore = self.get_api_config(conversation, 'ignore_events', False)
-        if not ignore:
-            push_url = self.get_api_config(conversation, 'push_event_url')
-            yield self.send_event_to_client(event, conversation, push_url)
+            config = yield self.get_message_config(event)
+            conversation = config.conversation
+            ignore = self.get_api_config(conversation, 'ignore_events', False)
+            if not ignore:
+                push_url = self.get_api_config(conversation, 'push_event_url')
+                yield self.send_event_to_client(event, conversation, push_url)
+        except Exception as e:
+            log.warning(e.message)
+            log.warning("execption happened")
 
     def send_event_to_client(self, event, conversation, push_url):
         if push_url is None:
