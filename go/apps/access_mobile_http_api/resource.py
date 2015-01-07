@@ -152,7 +152,7 @@ class MessageResource(BaseResource):
         user_account = request.getUser()
         d = self.worker.concurrency_limiter.start(user_account)
         try:
-             if payload.get('get_status'):
+            if payload.get('get_status'):
                 yield self.handle_get_status(request,payload)
             else :
                 yield self.handle_PUT_send_to(request, payload)
