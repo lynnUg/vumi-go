@@ -235,15 +235,20 @@ class NoStreamingHTTPWorker(GoApplicationWorker):
     @inlineCallbacks
     def consume_user_message(self, message):
         msg_mdh = self.get_metadata_helper(message)
-        conversation = yield msg_mdh.get_conversation()
-        if conversation is None:
-            log.warning("Cannot find conversation for message: %r" % (
-                message,))
-            return
-        ignore = self.get_api_config(conversation, 'ignore_messages', False)
-        if not ignore:
-            push_url = self.get_api_config(conversation, 'push_message_url')
-            yield self.send_message_to_client(message, conversation, push_url)
+        try:
+            conversation = yield msg_mdh.get_conversation()
+            if conversation is None:
+                log.warning("Cannot find conversation for message: %r" % (
+                    message,))
+                return
+            ignore = self.get_api_config(conversation, 'ignore_messages', False)
+            if not ignore:
+                push_url = self.get_api_config(conversation, 'push_message_url')
+                yield self.send_message_to_client(message, conversation, push_url)
+        except Exception as e:
+            log.warning(e.message)
+            log.warning("execption happened")
+
 
     def send_message_to_client(self, message, conversation, push_url):
         if push_url is None:
