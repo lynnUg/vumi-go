@@ -458,8 +458,12 @@ class GoStoringMiddleware(StoringMiddleware):
 
     @inlineCallbacks
     def handle_inbound(self, message, connector_name):
-        batch_id = yield self.get_batch_id(message)
-        yield self.store.add_inbound_message(message, batch_id=batch_id)
+        try:
+            batch_id = yield self.get_batch_id(message)
+            yield self.store.add_inbound_message(message, batch_id=batch_id)
+        except Exception as e:
+            log.warning(e.message)
+            log.warning("execption happened")
         returnValue(message)
 
     @inlineCallbacks
