@@ -16,7 +16,7 @@ from vumi.persist.txredis_manager import TxRedisManager
 
 from go.vumitools.api import VumiApi
 from go.vumitools.utils import MessageMetadataHelper
-
+from vumi import log
 
 class NormalizeMsisdnMiddleware(TransportMiddleware):
 
