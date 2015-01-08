@@ -156,8 +156,8 @@ class MessageResource(BaseResource):
             log.warning(payload)
             if payload.get('get_status'):
                 yield self.handle_get_status(request,payload)
-            #elif payload.get('to_addr'):
-                #yield self.handle_PUT_send_to(request, payload)
+            elif payload.get('to_addr'):
+                yield self.handle_PUT_send_to(request, payload)
             else :
                 self.client_error_response(request, 'Invalid Message for Vumi')
                 return
