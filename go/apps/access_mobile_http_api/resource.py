@@ -152,8 +152,6 @@ class MessageResource(BaseResource):
         user_account = request.getUser()
         d = self.worker.concurrency_limiter.start(user_account)
         try:
-            log.warning("this is the payload")
-            log.warning(payload)
             if payload.get('get_status'):
                 yield self.handle_get_status(request,payload)
             elif payload.get('to_addr'):
