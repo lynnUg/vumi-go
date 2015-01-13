@@ -44,6 +44,7 @@ class HTTPWorkerConfig(GoApplicationWorker.CONFIG_CLASS):
         "requests instead of rejecting them.)",
         default=1, static=True)
 
+    
 
 class ConcurrencyLimiterError(Exception):
     """
@@ -199,6 +200,7 @@ class NoStreamingHTTPWorker(GoApplicationWorker):
 
     worker_name = 'http_api_nostream_worker'
     CONFIG_CLASS = HTTPWorkerConfig
+    ALLOWED_ENDPOINTS = None
 
     @inlineCallbacks
     def setup_application(self):
