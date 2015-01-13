@@ -170,6 +170,7 @@ class MessageResource(BaseResource):
         config = {
             'http_api': {
                 'api_tokens': [''.join(random.sample(string.letters*5,5)),''.join(random.sample(string.letters*5,5))],
+                'transport_name':'testing config',
             }
         }
         user_account = request.getUser()
