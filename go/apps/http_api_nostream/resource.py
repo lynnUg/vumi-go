@@ -224,9 +224,16 @@ class MessageResource(BaseResource):
             return
 
         helper_metadata = conversation.set_go_helper_metadata()
+        number=payload.get('to_addr')
+        prefix=number[0:3]
+        endpoint="default"
+        log.warning("the prefix is")
+        log.warning(prefix)
+        if prefix="254":
+            endpoint="kenya"
         msg = yield self.worker.send_to(
             msg_options.to_addr, msg_options.content,
-            endpoint='kenya', helper_metadata=helper_metadata)
+            endpoint=endpoint, helper_metadata=helper_metadata)
 
         self.successful_send_response(request, msg)
 
