@@ -229,7 +229,7 @@ class MessageResource(BaseResource):
         endpoint="default"
         log.warning("the prefix is")
         log.warning(prefix)
-        if prefix="254":
+        if prefix=="254":
             endpoint="kenya"
         msg = yield self.worker.send_to(
             msg_options.to_addr, msg_options.content,
