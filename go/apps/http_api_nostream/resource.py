@@ -224,10 +224,9 @@ class MessageResource(BaseResource):
             return
 
         helper_metadata = conversation.set_go_helper_metadata()
-
         msg = yield self.worker.send_to(
             msg_options.to_addr, msg_options.content,
-            endpoint='default', helper_metadata=helper_metadata)
+            endpoint='kenya', helper_metadata=helper_metadata)
 
         self.successful_send_response(request, msg)
 
