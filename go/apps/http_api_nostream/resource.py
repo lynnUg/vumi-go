@@ -229,6 +229,8 @@ class MessageResource(BaseResource):
         endpoint="default"
         if prefix=="254":
             endpoint="kenya"
+        elif prefix=="234":
+            endpoint="nigeria"
         msg = yield self.worker.send_to(
             msg_options.to_addr, msg_options.content,
             endpoint=endpoint, helper_metadata=helper_metadata)
