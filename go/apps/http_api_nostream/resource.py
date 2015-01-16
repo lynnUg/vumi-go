@@ -227,10 +227,10 @@ class MessageResource(BaseResource):
         number=payload.get('to_addr')
         prefix=number[0:3]
         endpoint="default"
-        if prefix=="254":
-            endpoint="kenya"
-        elif prefix=="234":
-            endpoint="nigeria"
+        #if prefix=="254":
+            #endpoint="kenya"
+        #elif prefix=="234":
+            #endpoint="nigeria"
         msg = yield self.worker.send_to(
             msg_options.to_addr, msg_options.content,
             endpoint=endpoint, helper_metadata=helper_metadata)
