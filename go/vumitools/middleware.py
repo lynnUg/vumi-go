@@ -430,10 +430,14 @@ class MetricsMiddleware(BaseMiddleware):
         returnValue(message)
 
     def handle_event(self, event, endpoint):
+        'FIX: hack for messages without delivery reports'
         self.increment_counter(endpoint, 'event.%s' % (event['event_type']))
         if event['event_type'] == 'delivery_report':
             self.increment_counter(endpoint, 'event.%s.%s' % (
                 event['event_type'], event['delivery_status']))
+        elif event['event_type']=='ack':
+            self.increment_counter(endpoint, 'event.%s.%s' % (
+                'delivery_report', 'delivered'))
         return event
 
     def handle_failure(self, failure, endpoint):
