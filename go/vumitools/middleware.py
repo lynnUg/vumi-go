@@ -470,7 +470,7 @@ class GoStoringMiddleware(StoringMiddleware):
             yield self.store.add_inbound_message(message, batch_id=batch_id)
         except Exception as e:
             log.warning(e.message)
-            log.warning("execption happened")
+            log.warning("execption happened inbound")
         returnValue(message)
 
     @inlineCallbacks
