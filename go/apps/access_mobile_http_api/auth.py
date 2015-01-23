@@ -31,10 +31,6 @@ class PasswordChecker:
     def requestAvatarId(self, credentials):
         username = credentials.username
         token = credentials.password
-        log.warning("username")
-        log.warning(username)
-        log.warning("password")
-        log.warning(password)
         user_exists = yield self.worker.vumi_api.user_exists(username)
         if user_exists:
             user_api = self.worker.vumi_api.get_user_api(username)
