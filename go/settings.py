@@ -21,8 +21,9 @@ def static_paths(paths):
         paths)
 
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000', 'localhost:8000',]
 
 ADMINS = (
     ('Foundation Developers', 'dev@praekeltfoundation.org'),
@@ -92,6 +93,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    abspath('static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -338,6 +340,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 paths = yaml.safe_load(open(os.path.join(PROJECT_ROOT, '..', 'js_paths.yml')))
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+
 PIPELINE_CSS = {
     'vendor': {
         'source_filenames': static_paths(paths['client']['styles']['vendor']),
