@@ -260,7 +260,7 @@ class AmHTTPWorker(GoApplicationWorker):
             accesstoken=data['accesstoken']
             if "create_voucher" in data:
                 if data["create_voucher"]:
-                    if not settings.configured:
+                  if not settings.configured:
                     settings.configure()
                     voucher=Voucher.object.create(phone_number=data['to_addr'])
                     content= content+" "+voucher.voucher_number
