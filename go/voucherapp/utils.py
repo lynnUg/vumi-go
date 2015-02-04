@@ -5,7 +5,7 @@ import psycopg2.extras
 def real_dict_connect(*args, **kwargs):
     kwargs['connection_factory'] = psycopg2.extras.RealDictConnection
     return psycopg2.connect(*args, **kwargs)
-class DictRowConnection(txpostgres.Connection):
+class DictRowConnectionPool(txpostgres.Connection):
     """Extend the txpostgres ``Connection`` and override the
     ``cursorFactory``
 
