@@ -15,7 +15,7 @@ from go.apps.access_mobile_http_api.resource import ApiResource
 from go.base.utils import extract_auth_from_url
 from go.vumitools.app_worker import GoApplicationWorker
 from vumi.components.window_manager import WindowManager
-from voucherapp import models
+from go.voucherapp import models
 
 
 
