@@ -6,18 +6,18 @@ from twisted.internet.endpoints import serverFromString
 
 from django.core.management.base import BaseCommand
 
-from go.billing import settings as app_settings
-from go.billing.utils import DictRowConnectionPool
-from go.billing import api
+from go.voucherapp import settings as app_settings
+from go.voucherapp.utils import DictRowConnectionPool
+from go.vocuherapp import api
 
 
 class Command(BaseCommand):
     """Custom Django management command to start the billing server"""
 
-    help = "Starts the billing server"
+    help = "Starts the voucher server"
 
     def handle(self, *args, **options):
-        """Run the Billing server"""
+        """Run the voucher server"""
 
         def connection_established(connection_pool):
             from twisted.web.server import Site
@@ -29,7 +29,7 @@ class Command(BaseCommand):
             endpoint.listen(site)
             reactor.callWhenRunning(
                 lambda _: _.stdout.write(
-                    "Billing server is running on %s\n" %
+                    "Vocuher server is running on %s\n" %
                     app_settings.ENDPOINT_DESCRIPTION_STRING), self)
 
         def connection_error(err):
