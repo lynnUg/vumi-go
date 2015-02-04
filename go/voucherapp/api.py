@@ -7,21 +7,58 @@ from twisted.web.server import NOT_DONE_YET
 
 import string, random
 
+from go.billing.utils import JSONEncoder, JSONDecoder,
 
-from go.voucherapp import settings as app_settings
-
-from go.voucherapp import DictRowConnectionPool
 class BaseResource(Resource):
     """Base class for the APIs ``Resource``s"""
 
     _connection_pool = None  # The txpostgres connection pool
 
-    def __init__(self):
+    def __init__(self, connection_pool):
         Resource.__init__(self)
-        connection_string = app_settings.get_connection_string()
-        connection_pool = DictRowConnectionPool(
-            None, connection_string, min=app_settings.API_MIN_CONNECTIONS)
-        self.connection_pool = yield connection_pool.start()
+        self._connection_pool = connection_pool
+    def _handle_error(self, error, request, *args, **kwargs):
+        """Log the error and return an HTTP 500 response"""
+        log.err(error)
+        request.setResponseCode(500)  # Internal Server Error
+        request.write(error.getErrorMessage())
+        request.finish()
+
+    def _handle_bad_request(self, request, *args, **kwargs):
+        """Handle a bad request"""
+        request.setResponseCode(400)  # Bad Request
+        request.finish()
+
+    def _render_to_json(self, result, request, *args, **kwargs):
+        """Render the ``result`` as a JSON string.
+
+        If the result is ``None`` return an HTTP 404 response.
+
+        """
+        if result is not None:
+            data = json.dumps(result, cls=JSONEncoder)
+            request.setResponseCode(200)  # OK
+            request.setHeader('Content-Type', 'application/json')
+            request.write(data)
+        else:
+            request.setResponseCode(404)  # Not Found
+        request.finish()
+
+    def _parse_json(self, request):
+        """Return the POSTed data as a JSON object.
+
+        If the *Content-Type* is anything other than *application/json*
+        return ``None``.
+
+        """
+        content_type = request.getHeader('Content-Type')
+        if request.method == 'POST' and content_type == 'application/json':
+            content = request.content.read()
+            return json.loads(content, cls=JSONDecoder)
+        return None
+
+
+class VoucherResource(Resource):
     @defer.inlineCallbacks
     def get_user(self, voucher_number):
         """Fetch the user with the given ``id``"""
@@ -39,7 +76,7 @@ class BaseResource(Resource):
             defer.returnValue(None)
     def create_voucher_number(self):
             length=7
-        	return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
+            return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
     @defer.inlineCallbacks
     def create_voucher_interaction(self, cursor, phone_number):
         """Create a new voucher"""
@@ -66,3 +103,33 @@ class BaseResource(Resource):
             self.create_voucher_interaction, phone_number)
 
         defer.returnValue(result)
+    def render_POST(self, request):
+        """Handle an HTTP POST request"""
+        data = self._parse_json(request)
+        if data:
+            phone_number = data.get('phone_number', None)
+            if phone_number:
+                d = self.create_voucher(phone_number)
+                d.addCallbacks(self._render_to_json, self._handle_error,
+                               callbackArgs=[request], errbackArgs=[request])
+
+            else:
+                self._handle_bad_request(request)
+        else:
+            self._handle_bad_request(request)
+        return NOT_DONE_YET
+class Root(BaseResource):
+    """The root resource"""
+
+    def __init__(self, connection_pool):
+        BaseResource.__init__(self, connection_pool)
+        self.putChild('voucher', VoucherResource(connection_pool))
+
+    def getChild(self, name, request):
+        if name == '':
+            return self
+        return Resource.getChild(self, name, request)
+
+    def render_GET(self, request):
+        request.setResponseCode(200)  # OK
+        return ''
