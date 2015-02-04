@@ -332,7 +332,8 @@ class TestAmHTTPWorker(TestAmHTTPWorkerBase):
             response.headers.getRawHeaders('content-type'),
             ['application/json; charset=utf-8'])
         put_msg = json.loads(response.delivered_body)
-
+        print "here"
+        print put_msg
         self.assertTrue('convkey' in put_msg)
         self.assertTrue('accesstoken' in put_msg)
 

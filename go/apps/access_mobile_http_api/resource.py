@@ -221,6 +221,7 @@ class MessageResource(BaseResource):
         }
         new_send_message.update(conv_details)
         yield self.handle_send_message(**new_send_message)
+        conv_details["create_voucher"]=create_voucher
         response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
 
