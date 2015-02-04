@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 
 from go.voucherapp import settings as app_settings
 from go.voucherapp.utils import DictRowConnectionPool
-from go.vocuherapp import api
+from go.voucherapp import api
 
 
 class Command(BaseCommand):
