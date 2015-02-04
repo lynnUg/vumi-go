@@ -1,0 +1,6 @@
+from django.contrib import admin
+
+from go.voucherapp.models import Voucher
+from go.voucherapp.forms import VoucherForm
+class VoucherAdmin(admin.Mo
+admin.site.register(Voucher,VoucherAdmin)
