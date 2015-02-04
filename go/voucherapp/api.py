@@ -7,7 +7,7 @@ from twisted.web.server import NOT_DONE_YET
 
 import string, random
 
-from go.billing.utils import JSONEncoder, JSONDecoder,
+from go.billing.utils import JSONEncoder, JSONDecoder
 
 class BaseResource(Resource):
     """Base class for the APIs ``Resource``s"""
