@@ -36,6 +36,7 @@ class Command(BaseCommand):
             self.stderr.write(err)
 
         log.startLogging(sys.stdout)
+        self.stdout.write("we are here")
         connection_string = app_settings.get_connection_string()
         connection_pool = DictRowConnectionPool(
             None, connection_string, min=app_settings.API_MIN_CONNECTIONS)
