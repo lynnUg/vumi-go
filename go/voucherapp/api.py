@@ -58,7 +58,7 @@ class BaseResource(Resource):
         return None
 
 
-class VoucherResource(Resource):
+class VoucherResource(BaseResource):
     @defer.inlineCallbacks
     def get_user(self, voucher_number):
         """Fetch the user with the given ``id``"""
