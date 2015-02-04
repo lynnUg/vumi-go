@@ -16,7 +16,8 @@ from go.base.utils import extract_auth_from_url
 from go.vumitools.app_worker import GoApplicationWorker
 from vumi.components.window_manager import WindowManager
 from go.voucherapp import models
-
+from django.core.management import setup_environ
+from go import settings
 
 
 
@@ -260,6 +261,7 @@ class AmHTTPWorker(GoApplicationWorker):
             accesstoken=data['accesstoken']
             if "create_voucher" in data:
                 if data["create_voucher"]:
+                    setup_environ(settings)
                     voucher=Voucher.object.create(phone_number=data['to_addr'])
                     content= content+" "+voucher.voucher_number
 
