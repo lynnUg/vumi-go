@@ -268,8 +268,8 @@ class AmHTTPWorker(GoApplicationWorker):
                 convkey,)
         
             payload = { "to_addr": to_addr ,"content": content}
-            #msg=requests.put(url, auth=(usertoken, accesstoken),
-              #data=json.dumps(payload))
+            msg=requests.put(url, auth=(usertoken, accesstoken),
+              data=json.dumps(payload))
             log.warning(dir(msg))
             #yield self.window_manager.set_external_id(window_id, flight_key,
             #msg['message_id'])
