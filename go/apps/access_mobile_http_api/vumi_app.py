@@ -258,6 +258,8 @@ class AmHTTPWorker(GoApplicationWorker):
             convkey = data['convkey']
             usertoken=data['usertoken']
             accesstoken=data['accesstoken']
+            print "here is data"
+            print data
             auth_headers = {
                 'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
                 }
