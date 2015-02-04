@@ -9,7 +9,6 @@ from vumi.config import ConfigInt, ConfigText
 from vumi.utils import http_request_full, HttpTimeoutError
 from vumi.transports.httprpc import httprpc
 from vumi import log
-
 from go.apps.access_mobile_http_api.auth import AuthorizedResource
 from go.apps.http_api_nostream.resource import ConversationResource
 from go.apps.access_mobile_http_api.resource import ApiResource
@@ -278,16 +277,10 @@ class AmHTTPWorker(GoApplicationWorker):
             log.warning("execption happened")
         
     @inlineCallbacks
-    def send_message_via_window(self, window_id, to_addr, content,convkey,usertoken,accesstoken):
+    def send_message_via_window(self, **kwargs):
         log.warning("adding to window")
-        yield self.window_manager.create_window(window_id, strict=False)
-        yield self.window_manager.add(window_id, {
-            'to_addr': to_addr,
-            'content': content,
-            'convkey': convkey,
-            'usertoken':usertoken,
-            'accesstoken':accesstoken,
-            })
+        yield self.window_manager.create_window(kwargs["window_id"], strict=False)
+        yield self.window_manager.add(kwargs["window_id"], kwargs)
 
    
 

@@ -188,11 +188,12 @@ class MessageResource(BaseResource):
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
     @inlineCallbacks
-    def handle_send_message(self,message,numbers,convkey,accesstoken,usertoken):
-        window_id = yield convkey
-        for to_addr in numbers:
+    def handle_send_message(self,**kwargs):
+        window_id = yield kwargs["convkey"]
+        kwargs["window_id"]=window_id
+        for to_addr in kwargs["numbers"]:
             log.warning("sending via window")
-            yield self.worker.send_message_via_window( window_id, to_addr, message,convkey,usertoken,accesstoken)
+            yield self.worker.send_message_via_window(**kwargs)
         
 
 
@@ -207,10 +208,16 @@ class MessageResource(BaseResource):
         numbers=numbers.split(",") 
         message=payload.get('content')
         usertoken = request.getUser()
+        create_voucher= False
+        if "create_voucher" in payload:
+            create_voucher= payload.get('create_voucher')
+
         new_send_message={
         "message":message,
         "numbers":numbers,
-        "usertoken":usertoken
+        "usertoken":usertoken,
+        "create_voucher": create_voucher
+
         }
         new_send_message.update(conv_details)
         yield self.handle_send_message(**new_send_message)
