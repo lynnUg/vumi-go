@@ -221,7 +221,8 @@ class MessageResource(BaseResource):
         }
         new_send_message.update(conv_details)
         yield self.handle_send_message(**new_send_message)
-        response= json.dumps(conv_details) 
+        #response= json.dumps(conv_details)
+        response="" 
         self.successful_send_response(request, response)
 
     @inlineCallbacks
