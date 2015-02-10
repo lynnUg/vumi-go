@@ -60,7 +60,7 @@ class BaseResource(Resource):
 
 class VoucherResource(BaseResource):
     @defer.inlineCallbacks
-    def get_user(self, voucher_number):
+    def get_voucher(self, voucher_number):
         """Fetch the user with the given ``id``"""
         query = """
             SELECT id, phone_number, voucher_number
@@ -90,7 +90,7 @@ class VoucherResource(BaseResource):
 
         params = {
             'phone_number': phone_number,
-            'vocuher_number': self.create_voucher_number(password)
+            'voucher_number': self.create_voucher_number(password)
         }
 
         cursor = yield cursor.execute(query, params)
