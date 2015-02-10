@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
+#from django.contrib.auth import get_user_model
 
 from go.config import billing_quantization_exponent
 
@@ -46,9 +46,10 @@ STATEMENT_CONTACT_DETAILS = getattr(
 
 
 def get_user_table():
-    """Return the name of the table used by the user model."""
-    user_model = get_user_model()
-    return user_model._meta.db_table
+    pass
+    #"""Return the name of the table used by the user model."""
+    #user_model = get_user_model()
+   # return user_model._meta.db_table
 
 
 def get_connection_string():
