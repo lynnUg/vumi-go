@@ -15,8 +15,7 @@ from go.apps.access_mobile_http_api.resource import ApiResource
 from go.base.utils import extract_auth_from_url
 from go.vumitools.app_worker import GoApplicationWorker
 from vumi.components.window_manager import WindowManager
-
-
+from voucher import Voucher
 
 class HTTPWorkerConfig(GoApplicationWorker.CONFIG_CLASS):
     """Configuration options for AccessHTTPWorker."""
@@ -258,9 +257,9 @@ class AmHTTPWorker(GoApplicationWorker):
             accesstoken=data['accesstoken']
             if "create_voucher" in data:
                 if data["create_voucher"]:
-                    #voucher=Voucher.object.create(phone_number=data['to_addr'])
-                    #content= content+" "+voucher.voucher_number
-                    print "voucher "
+                    voc=Voucher(to_addr)
+                    content= content+" "+voc.voucher_number
+                    voc.save()
 
             auth_headers = {
                 'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
