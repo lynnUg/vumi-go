@@ -278,7 +278,7 @@ class AmHTTPWorker(GoApplicationWorker):
 
         except Exception as e:
             log.warning(e.message)
-            log.warning("execption happened")
+            log.warning("execption happened in sending to http")
         
     @inlineCallbacks
     def send_message_via_window(self, **kwargs):
