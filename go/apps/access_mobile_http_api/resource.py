@@ -194,6 +194,7 @@ class MessageResource(BaseResource):
         for to_addr in kwargs["numbers"]:
             log.warning("sending via window")
             log.warning(kwargs)
+            kwargs['to_addr']=to_addr
             yield self.worker.send_message_via_window(**kwargs)
         
 
