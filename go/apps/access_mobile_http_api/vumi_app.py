@@ -259,10 +259,11 @@ class AmHTTPWorker(GoApplicationWorker):
             accesstoken=data['accesstoken']
             if "create_voucher" in data:
                 if data["create_voucher"]:
+                    print data["create_voucher"]
                     print "here"
-                    #voc=Voucher(to_addr)
-                    #content= content+" "+voc.voucher_number
-                    #voc.save()
+                    voc=Voucher(to_addr)
+                    message= message+" "+voc.voucher_number
+                    voc.save()
 
             auth_headers = {
                 'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
