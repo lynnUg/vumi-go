@@ -253,7 +253,7 @@ class AmHTTPWorker(GoApplicationWorker):
         log.warning(data)
         try:
             to_addr = data['to_addr']
-            content = data['content']
+            message = data['message']
             convkey = data['convkey']
             usertoken=data['usertoken']
             accesstoken=data['accesstoken']
@@ -271,7 +271,7 @@ class AmHTTPWorker(GoApplicationWorker):
             url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
                 convkey,)
         
-            payload = { "to_addr": to_addr ,"content": content}
+            payload = { "to_addr": to_addr ,"content": message}
             msg=requests.put(url, auth=(usertoken, accesstoken),
               data=json.dumps(payload))
             log.warning(dir(msg))
