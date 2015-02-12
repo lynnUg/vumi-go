@@ -285,6 +285,7 @@ class AmHTTPWorker(GoApplicationWorker):
     @inlineCallbacks
     def send_message_via_window(self, **kwargs):
         log.warning("adding to window")
+        log.warning(kwargs)
         yield self.window_manager.create_window(kwargs["window_id"], strict=False)
         yield self.window_manager.add(kwargs["window_id"], kwargs)
 
