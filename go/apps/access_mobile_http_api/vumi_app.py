@@ -274,7 +274,7 @@ class AmHTTPWorker(GoApplicationWorker):
             url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
                 convkey,)
             for number in numbers:
-                payload = { "to_addr": to_addr ,"content": message}
+                payload = { "to_addr": number ,"content": message}
                 msg=requests.put(url, auth=(usertoken, accesstoken),
                     data=json.dumps(payload))
             #log.warning(dir(msg))
