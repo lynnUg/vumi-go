@@ -253,8 +253,8 @@ class AmHTTPWorker(GoApplicationWorker):
         #log.warning(data)
         try:
             data = yield self.window_manager.get_data(window_id, flight_key)
-            to_addr = data['to_addr']
-            #message = data['message']
+            #to_addr = data['to_addr']
+            message = data['message']
             numbers=data['numbers']
             convkey = data['convkey']
             usertoken=data['usertoken']
