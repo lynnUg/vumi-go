@@ -191,11 +191,12 @@ class MessageResource(BaseResource):
     def handle_send_message(self,**kwargs):
         window_id = yield kwargs["convkey"]
         kwargs["window_id"]=window_id
-        for to_addr in kwargs["numbers"]:
-            log.warning("sending via window")
-            log.warning(kwargs)
-            kwargs['to_addr']=to_addr
-            yield self.worker.send_message_via_window(**kwargs)
+        yield self.worker.send_message_via_window(**kwargs)
+        #for to_addr in kwargs["numbers"]:
+            #log.warning("sending via window")
+            #log.warning(kwargs)
+            #kwargs['to_addr']=to_addr
+            #yield self.worker.send_message_via_window(**kwargs)
         
 
 
