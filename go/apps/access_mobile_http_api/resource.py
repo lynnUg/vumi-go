@@ -25,6 +25,7 @@ class BaseResource(resource.Resource):
 
     def __init__(self, worker):
         resource.Resource.__init__(self)
+        self.content=""
         self.worker = worker
         self.vumi_api = self.worker.vumi_api
         self.user_apis = {}
@@ -120,6 +121,7 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
+        self.content=request.content.read()
         response= json.dumps("processing request please wait")
         self.successful_send_response(request, response)
         d = Deferred()
@@ -148,8 +150,7 @@ class MessageResource(BaseResource):
     @inlineCallbacks
     def handle_PUT(self, request):
         try:
-            content=request.content.read()
-            payload = json.loads(content)
+            payload = json.loads(self.content)
         except ValueError:
             self.client_error_response(request, 'Invalid Message for Vumi')
             return
