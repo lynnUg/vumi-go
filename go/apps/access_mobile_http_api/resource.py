@@ -120,6 +120,8 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
+        request.write('')
+        request.notifyFinish()
         #request.write("hello world")
         #d = request.notifyFinish()
         #d.addCallback(self.handle_PUT)
