@@ -124,7 +124,7 @@ class MessageResource(BaseResource):
         d = request.notifyFinish()
         d.addCallback(self.handle_PUT)
         d.addErrback(println, "error")
-        reactor.callLater(10, request.finish)
+        #reactor.callLater(10, request.finish)
         return NOT_DONE_YET
         #d = Deferred()
         #d.addCallback(self.handle_PUT)
