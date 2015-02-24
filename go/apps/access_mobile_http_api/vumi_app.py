@@ -250,7 +250,7 @@ class AmHTTPWorker(GoApplicationWorker):
     def on_window_key_ready(self, window_id, flight_key):
         #log.warning("getting data")
         
-        #log.warning(data)
+        log.warning(data)
         try:
             data = yield self.window_manager.get_data(window_id, flight_key)
             to_addr = data['to_addr']
