@@ -125,7 +125,7 @@ class MessageResource(BaseResource):
         # See #proxy_buffering at
         # http://nginx.org/en/docs/http/ngx_http_proxy_module.html
         #resp_headers.addRawHeader('X-Accel-Buffering',
-                                  'yes' if self.proxy_buffering else 'no')
+        #                        'yes' if self.proxy_buffering else 'no')
         # Twisted's Agent has trouble closing a connection when the server has
         # sent the HTTP headers but not the body, but sometimes we need to
         # close a connection when only the headers have been received.
