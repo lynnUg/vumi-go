@@ -120,15 +120,11 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
-        request.write('')
+        request.setHeader('Content-Type', 'application/json; charset=utf-8')
+        request.setResponseCode(code, status)
+        response= json.dumps("processing request please wait")
+        request.write(response)
         request.finish()
-        #request.notifyFinish()
-        #request.write("hello world")
-        #d = request.notifyFinish()
-        #d.addCallback(self.handle_PUT)
-        #d.addErrback(println, "error")
-        #reactor.callLater(10, request.finish)
-        #return NOT_DONE_YET
         d = Deferred()
         d.addCallback(self.handle_PUT)
         d.callback(request)
@@ -237,7 +233,7 @@ class MessageResource(BaseResource):
         new_send_message.update(conv_details)
         yield self.handle_send_message(**new_send_message)
         conv_details["create_voucher"]=create_voucher
-        response= json.dumps(conv_details) 
+        #response= json.dumps(conv_details) 
         #self.successful_send_response(request, response)
 
 
