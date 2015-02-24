@@ -120,16 +120,16 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
-        request.write("hello world")
-        d = request.notifyFinish()
-        d.addCallback(self.handle_PUT)
+        #request.write("hello world")
+        #d = request.notifyFinish()
+        #d.addCallback(self.handle_PUT)
         #d.addErrback(println, "error")
         #reactor.callLater(10, request.finish)
-        return NOT_DONE_YET
-        #d = Deferred()
-        #d.addCallback(self.handle_PUT)
-        #d.callback(request)
         #return NOT_DONE_YET
+        d = Deferred()
+        d.addCallback(self.handle_PUT)
+        d.callback(request)
+        return NOT_DONE_YET
     
 
     def get_load_balancer_metadata(self, payload):
