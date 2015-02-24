@@ -20,6 +20,7 @@ import base64
 from time import gmtime, strftime
 from vumi.utils import http_request_full
 from functools import partial
+from twisted.internet import reactor
 class BaseResource(resource.Resource):
 
     def __init__(self, worker):
@@ -119,10 +120,16 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
-        d = Deferred()
+        request.write("hello world")
+        d = request.notifyFinish()
         d.addCallback(self.handle_PUT)
-        d.callback(request)
+        d.addErrback(println, "error")
+        reactor.callLater(10, request.finish)
         return NOT_DONE_YET
+        #d = Deferred()
+        #d.addCallback(self.handle_PUT)
+        #d.callback(request)
+        #return NOT_DONE_YET
     
 
     def get_load_balancer_metadata(self, payload):
