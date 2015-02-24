@@ -253,9 +253,9 @@ class AmHTTPWorker(GoApplicationWorker):
         #log.warning(data)
         try:
             data = yield self.window_manager.get_data(window_id, flight_key)
-            #to_addr = data['to_addr']
+            to_addr = data['to_addr']
             message = data['message']
-            numbers=data['numbers']
+            #numbers=data['numbers']
             convkey = data['convkey']
             usertoken=data['usertoken']
             accesstoken=data['accesstoken']
@@ -263,19 +263,27 @@ class AmHTTPWorker(GoApplicationWorker):
             auth_headers = {
                 'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
                 }
-
+         
             url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
                 convkey,)
-            for number in numbers:
-                out_message=""
-                if "create_voucher" in data:
+            if "create_voucher" in data:
                     if data["create_voucher"]:
-                        voc=Voucher(number)
-                        out_message= message+" "+voc.voucher_number
+                        voc=Voucher(to_addr )
+                        message= message+" "+voc.voucher_number
                         voc.save()
-                payload = { "to_addr": number ,"content": out_message}
-                msg=requests.put(url, auth=(usertoken, accesstoken),
+            payload = { "to_addr": to_addr ,"content": message }
+            msg=requests.put(url, auth=(usertoken, accesstoken),
                     data=json.dumps(payload))
+            #for number in numbers:
+                #out_message=""
+                #if "create_voucher" in data:
+                    #if data["create_voucher"]:
+                        #voc=Voucher(number)
+                        #out_message= message+" "+voc.voucher_number
+                        #voc.save()
+                #payload = { "to_addr": number ,"content": out_message}
+                #msg=requests.put(url, auth=(usertoken, accesstoken),
+                    #data=json.dumps(payload))
             
 
         except Exception as e:

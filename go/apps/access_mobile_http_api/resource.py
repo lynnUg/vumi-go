@@ -187,18 +187,13 @@ class MessageResource(BaseResource):
         user_api=yield self.worker.vumi_api.get_user_api(user_account)
         conv = yield user_api.new_conversation(**new_conv_data)
         conv.starting()
-        response= json.dumps("hello")
-        self.successful_send_response(request, response)
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
     @inlineCallbacks
-    def handle_send_message(self,**kwargs):
-        all_numbers=kwargs["numbers"]
-        for i in xrange(0,len(all_numbers),100):
-            window_id = yield kwargs["convkey"]
-            window_id=window_id +''.join(random.sample(string.letters*5,5))
-            kwargs["window_id"]=window_id
-            kwargs["numbers"]=all_numbers[i:i+100]
+    def handle_send_message(self,**kwargs,numbers):
+        window_id = yield kwargs["convkey"]
+        kwargs["window_id"]=window_id
+        for number in numbers:
             yield self.worker.send_message_via_window(**kwargs)
        
         
@@ -221,16 +216,16 @@ class MessageResource(BaseResource):
 
         new_send_message={
         "message":message,
-        "numbers":numbers,
+        #"numbers":numbers,
         "usertoken":usertoken,
         "create_voucher": create_voucher
 
         }
         new_send_message.update(conv_details)
-        yield self.handle_send_message(**new_send_message)
+        yield self.handle_send_message(**new_send_message,numbers)
         conv_details["create_voucher"]=create_voucher
         response= json.dumps(conv_details) 
-        #self.successful_send_response(request, response)
+        self.successful_send_response(request, response)
 
 
     @inlineCallbacks
