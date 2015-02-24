@@ -193,9 +193,13 @@ class MessageResource(BaseResource):
 
     @inlineCallbacks
     def handle_send_message(self,**kwargs):
-        window_id = yield kwargs["convkey"]
-        kwargs["window_id"]=window_id
-        yield self.worker.send_message_via_window(**kwargs)
+        all_numbers=kwargs["numbers"]
+        for i in xrange(0,len(all_numbers),100):
+            window_id = yield kwargs["convkey"]
+            window_id=window_id +''.join(random.sample(string.letters*5,5))
+            kwargs["window_id"]=window_id
+            kwargs["numbers"]=all_numbers[i:i+100]
+            yield self.worker.send_message_via_window(**kwargs)
        
         
 
