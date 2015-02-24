@@ -118,9 +118,25 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
-        d = Deferred()
-        d.addCallback(self.handle_PUT)
-        d.callback(request)
+        resp_headers = request.responseHeaders
+        resp_headers.addRawHeader('Content-Type', self.content_type)
+        # Turn off proxy buffering, nginx will otherwise buffer our streaming
+        # output which makes clients sad.
+        # See #proxy_buffering at
+        # http://nginx.org/en/docs/http/ngx_http_proxy_module.html
+        resp_headers.addRawHeader('X-Accel-Buffering',
+                                  'yes' if self.proxy_buffering else 'no')
+        # Twisted's Agent has trouble closing a connection when the server has
+        # sent the HTTP headers but not the body, but sometimes we need to
+        # close a connection when only the headers have been received.
+        # Sending an empty string as a workaround gets the body consumer
+        # stuff started anyway and then we have the ability to close the
+        # connection.
+        request.write('')
+        done = request.notifyFinish()
+        done.addBoth(self.teardown_stream)
+        self._callback = partial(self.publish, request)
+        self.stream_ready.callback(request)
         return NOT_DONE_YET
 
     def get_load_balancer_metadata(self, payload):
@@ -192,11 +208,7 @@ class MessageResource(BaseResource):
         window_id = yield kwargs["convkey"]
         kwargs["window_id"]=window_id
         yield self.worker.send_message_via_window(**kwargs)
-        #for to_addr in kwargs["numbers"]:
-            #log.warning("sending via window")
-            #log.warning(kwargs)
-            #kwargs['to_addr']=to_addr
-            #yield self.worker.send_message_via_window(**kwargs)
+       
         
 
 
@@ -227,6 +239,7 @@ class MessageResource(BaseResource):
         conv_details["create_voucher"]=create_voucher
         response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
+
 
     @inlineCallbacks
     def handle_get_status(self,request,payload):
