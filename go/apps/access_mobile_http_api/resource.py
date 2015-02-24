@@ -196,6 +196,7 @@ class MessageResource(BaseResource):
         numbers=kwargs["numbers"]
         kwargs.pop("numbers",None)
         for number in numbers:
+            kwargs["to_addr"]=number
             yield self.worker.send_message_via_window(**kwargs)
        
         
