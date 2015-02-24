@@ -248,12 +248,12 @@ class AmHTTPWorker(GoApplicationWorker):
 
     @inlineCallbacks
     def on_window_key_ready(self, window_id, flight_key):
-        log.warning("getting data")
+        #log.warning("getting data")
         
         
         try:
             data = yield self.window_manager.get_data(window_id, flight_key)
-            log.warning(data)
+            #log.warning(data)
             to_addr = data['to_addr']
             message = data['message']
             #numbers=data['numbers']
