@@ -32,7 +32,7 @@ class HTTPWorkerConfig(GoApplicationWorker.CONFIG_CLASS):
     concurrency_limit = ConfigInt(
         "Maximum number of clients per account. A value less than "
         "zero disables the limit.",
-        default=10)
+        default=-1)
     timeout = ConfigInt(
         "How long to wait for a response from a server when posting "
         "messages or events", default=5, static=True)
@@ -40,7 +40,7 @@ class HTTPWorkerConfig(GoApplicationWorker.CONFIG_CLASS):
         "Maximum number of clients per account per worker. A value less than "
         "zero disables the limit. (Unlike concurrency_limit, this queues "
         "requests instead of rejecting them.)",
-        default=1, static=True)
+        default=-1, static=True)
 
 
 class ConcurrencyLimiterError(Exception):
@@ -259,14 +259,6 @@ class AmHTTPWorker(GoApplicationWorker):
             convkey = data['convkey']
             usertoken=data['usertoken']
             accesstoken=data['accesstoken']
-            if "create_voucher" in data:
-                if data["create_voucher"]:
-                    #print data["create_voucher"]
-                    #print "here"
-                    #voc=Voucher(to_addr)
-                    #message= message+" "+voc.voucher_number
-                    #voc.save()
-                    pass
 
             auth_headers = {
                 'Authorization': ['Basic %s' % (base64.b64encode(usertoken+':'+accesstoken),)],
@@ -284,9 +276,7 @@ class AmHTTPWorker(GoApplicationWorker):
                 payload = { "to_addr": number ,"content": out_message}
                 msg=requests.put(url, auth=(usertoken, accesstoken),
                     data=json.dumps(payload))
-            #log.warning(dir(msg))
-            #yield self.window_manager.set_external_id(window_id, flight_key,
-            #msg['message_id'])
+            
 
         except Exception as e:
             log.warning(e.message)
@@ -294,8 +284,6 @@ class AmHTTPWorker(GoApplicationWorker):
         
     @inlineCallbacks
     def send_message_via_window(self, **kwargs):
-        #log.warning("adding to window")
-        #log.warning(kwargs)
         yield self.window_manager.create_window(kwargs["window_id"], strict=False)
         yield self.window_manager.add(kwargs["window_id"], kwargs)
 
