@@ -121,7 +121,8 @@ class MessageResource(BaseResource):
 
     def render_PUT(self, request):
         request.write('')
-        request.notifyFinish()
+        request.finish()
+        #request.notifyFinish()
         #request.write("hello world")
         #d = request.notifyFinish()
         #d.addCallback(self.handle_PUT)
@@ -237,7 +238,7 @@ class MessageResource(BaseResource):
         yield self.handle_send_message(**new_send_message)
         conv_details["create_voucher"]=create_voucher
         response= json.dumps(conv_details) 
-        self.successful_send_response(request, response)
+        #self.successful_send_response(request, response)
 
 
     @inlineCallbacks
@@ -251,7 +252,7 @@ class MessageResource(BaseResource):
         conv=yield self.get_conversation(user_account,conv_key)
         status=yield conv.get_progress_status()
         response=json.dumps(status)
-        self.successful_send_response(request,response)
+        #self.successful_send_response(request,response)
 
 
 
