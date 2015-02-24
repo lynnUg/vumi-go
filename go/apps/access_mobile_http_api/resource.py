@@ -123,7 +123,7 @@ class MessageResource(BaseResource):
         request.write("hello world")
         d = request.notifyFinish()
         d.addCallback(self.handle_PUT)
-        d.addErrback(println, "error")
+        #d.addErrback(println, "error")
         #reactor.callLater(10, request.finish)
         return NOT_DONE_YET
         #d = Deferred()
