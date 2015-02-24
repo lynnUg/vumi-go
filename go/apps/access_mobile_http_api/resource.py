@@ -190,9 +190,11 @@ class MessageResource(BaseResource):
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
     @inlineCallbacks
-    def handle_send_message(self,**kwargs,numbers):
+    def handle_send_message(self,**kwargs):
         window_id = yield kwargs["convkey"]
         kwargs["window_id"]=window_id
+        numbers=kwargs["numbers"]
+        kwargs.pop("numbers",None)
         for number in numbers:
             yield self.worker.send_message_via_window(**kwargs)
        
@@ -216,13 +218,13 @@ class MessageResource(BaseResource):
 
         new_send_message={
         "message":message,
-        #"numbers":numbers,
+        "numbers":numbers,
         "usertoken":usertoken,
         "create_voucher": create_voucher
 
         }
         new_send_message.update(conv_details)
-        yield self.handle_send_message(**new_send_message,numbers)
+        yield self.handle_send_message(**new_send_message)
         conv_details["create_voucher"]=create_voucher
         response= json.dumps(conv_details) 
         self.successful_send_response(request, response)
