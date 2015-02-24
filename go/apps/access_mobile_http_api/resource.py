@@ -19,6 +19,7 @@ import base64
 
 from time import gmtime, strftime
 from vumi.utils import http_request_full
+from functools import partial
 class BaseResource(resource.Resource):
 
     def __init__(self, worker):
@@ -118,26 +119,11 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
-        resp_headers = request.responseHeaders
-        #resp_headers.addRawHeader('Content-Type', self.content_type)
-        # Turn off proxy buffering, nginx will otherwise buffer our streaming
-        # output which makes clients sad.
-        # See #proxy_buffering at
-        # http://nginx.org/en/docs/http/ngx_http_proxy_module.html
-        #resp_headers.addRawHeader('X-Accel-Buffering',
-        #                        'yes' if self.proxy_buffering else 'no')
-        # Twisted's Agent has trouble closing a connection when the server has
-        # sent the HTTP headers but not the body, but sometimes we need to
-        # close a connection when only the headers have been received.
-        # Sending an empty string as a workaround gets the body consumer
-        # stuff started anyway and then we have the ability to close the
-        # connection.
-        request.write('')
-        done = request.notifyFinish()
-        done.addBoth(self.teardown_stream)
-        self._callback = partial(self.handle_PUT, request)
-        self.stream_ready.callback(request)
+        d = Deferred()
+        d.addCallback(self.handle_PUT)
+        d.callback(request)
         return NOT_DONE_YET
+    
 
     def get_load_balancer_metadata(self, payload):
         """
@@ -201,6 +187,8 @@ class MessageResource(BaseResource):
         user_api=yield self.worker.vumi_api.get_user_api(user_account)
         conv = yield user_api.new_conversation(**new_conv_data)
         conv.starting()
+        response= json.dumps(conv)
+        self.successful_send_response(request, response)
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
     @inlineCallbacks
@@ -238,7 +226,7 @@ class MessageResource(BaseResource):
         yield self.handle_send_message(**new_send_message)
         conv_details["create_voucher"]=create_voucher
         response= json.dumps(conv_details) 
-        self.successful_send_response(request, response)
+        #self.successful_send_response(request, response)
 
 
     @inlineCallbacks
