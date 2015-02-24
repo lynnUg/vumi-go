@@ -248,7 +248,7 @@ class AmHTTPWorker(GoApplicationWorker):
 
     @inlineCallbacks
     def on_window_key_ready(self, window_id, flight_key):
-        #log.warning("getting data")
+        log.warning("getting data")
         
         log.warning(data)
         try:
