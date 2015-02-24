@@ -135,7 +135,7 @@ class MessageResource(BaseResource):
         request.write('')
         done = request.notifyFinish()
         done.addBoth(self.teardown_stream)
-        self._callback = partial(self.publish, request)
+        self._callback = partial(self.handle_PUT, request)
         self.stream_ready.callback(request)
         return NOT_DONE_YET
 
