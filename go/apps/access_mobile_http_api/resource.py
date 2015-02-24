@@ -119,12 +119,12 @@ class MessageResource(BaseResource):
 
     def render_PUT(self, request):
         resp_headers = request.responseHeaders
-        resp_headers.addRawHeader('Content-Type', self.content_type)
+        #resp_headers.addRawHeader('Content-Type', self.content_type)
         # Turn off proxy buffering, nginx will otherwise buffer our streaming
         # output which makes clients sad.
         # See #proxy_buffering at
         # http://nginx.org/en/docs/http/ngx_http_proxy_module.html
-        resp_headers.addRawHeader('X-Accel-Buffering',
+        #resp_headers.addRawHeader('X-Accel-Buffering',
                                   'yes' if self.proxy_buffering else 'no')
         # Twisted's Agent has trouble closing a connection when the server has
         # sent the HTTP headers but not the body, but sometimes we need to
