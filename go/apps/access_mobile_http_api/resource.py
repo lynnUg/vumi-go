@@ -187,7 +187,7 @@ class MessageResource(BaseResource):
         user_api=yield self.worker.vumi_api.get_user_api(user_account)
         conv = yield user_api.new_conversation(**new_conv_data)
         conv.starting()
-        response= json.dumps(conv)
+        response= json.dumps("hello")
         self.successful_send_response(request, response)
         returnValue({"convkey":conv.key,"accesstoken":config['http_api']['api_tokens'][0]})
 
