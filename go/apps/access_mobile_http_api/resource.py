@@ -120,11 +120,8 @@ class MessageResource(BaseResource):
 
 
     def render_PUT(self, request):
-        request.setHeader('Content-Type', 'application/json; charset=utf-8')
-        request.setResponseCode(code, status)
         response= json.dumps("processing request please wait")
-        request.write(response)
-        request.finish()
+        self.successful_send_response(request, response)
         d = Deferred()
         d.addCallback(self.handle_PUT)
         d.callback(request)
