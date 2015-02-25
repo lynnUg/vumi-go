@@ -5,6 +5,8 @@ class Voucher(models.Model):
 	voucher_number = models.CharField(max_length=12,unique=True,blank=True)
 	phone_number  = models.CharField(max_length=15)
 	created_at =  models.DateTimeField(auto_now_add=True)
+  user_id= models.CharField(max_length=400,blank=True)
+
         def create_voucher_number(self):
                 length=7
         	return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
