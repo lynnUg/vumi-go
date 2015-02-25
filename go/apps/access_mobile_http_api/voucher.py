@@ -3,9 +3,10 @@ import sys
 import random
 import string
 class Voucher:
-    def __init__(self,phone_number):
+    def __init__(self,phone_number,user_id):
         self.phone_number=phone_number
         self.voucher_number=self.create_voucher_number()
+        self.user_id=user_id
     def save(self):
         con=None
         try:
@@ -14,18 +15,18 @@ class Voucher:
             cursor = con.cursor()
             query = """
             INSERT INTO voucherapp_voucher
-                (phone_number,voucher_number,created_at)
+                (phone_number,voucher_number,user_id,created_at)
             VALUES
-                (%(phone_number)s, %(voucher_number)s, now())
-            RETURNING id, phone_number, voucher_number
+                (%(phone_number)s, %(voucher_number)s,%(user_id)s, now())
+            RETURNING id, phone_number, voucher_number,user_id
             """ 
             params = {
             'phone_number': self.phone_number,
             'voucher_number': self.voucher_number
+            'user_id':self.user_id
             }
             cursor.execute(query, params)
             con.commit()
-            #print "it worked"
         except psycopg2.DatabaseError, e:
             print 'Error %s' % e    
             sys.exit(1)

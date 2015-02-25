@@ -269,22 +269,12 @@ class AmHTTPWorker(GoApplicationWorker):
                 convkey,)
             if "create_voucher" in data:
                     if data["create_voucher"]:
-                        voc=Voucher(to_addr )
+                        voc=Voucher(to_addr,usertoken)
                         message= message+" "+voc.voucher_number
                         voc.save()
             payload = { "to_addr": to_addr ,"content": message }
             msg=requests.put(url, auth=(usertoken, accesstoken),
                     data=json.dumps(payload))
-            #for number in numbers:
-                #out_message=""
-                #if "create_voucher" in data:
-                    #if data["create_voucher"]:
-                        #voc=Voucher(number)
-                        #out_message= message+" "+voc.voucher_number
-                        #voc.save()
-                #payload = { "to_addr": number ,"content": out_message}
-                #msg=requests.put(url, auth=(usertoken, accesstoken),
-                    #data=json.dumps(payload))
             
 
         except Exception as e:
