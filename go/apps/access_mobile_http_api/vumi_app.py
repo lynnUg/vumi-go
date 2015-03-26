@@ -267,10 +267,12 @@ class AmHTTPWorker(GoApplicationWorker):
          
             url='http://vumilynn.cloudapp.net/api/v1/go/http_api/%s/messages.json' % (
                 convkey,)
-            if "create_voucher" in data:
-                    if data["create_voucher"]:
+            #if "create_voucher" in data:
+                    #if data["create_voucher"]:
+            if "VOUCHERNO" in message :
                         voc=Voucher(to_addr,usertoken)
-                        message= message+" "+voc.voucher_number
+                        #message= message+" "+voc.voucher_number
+                        message=message.replace("VOUCHERNO",voc.voucher_number)
                         voc.save()
             payload = { "to_addr": to_addr ,"content": message }
             msg=requests.put(url, auth=(usertoken, accesstoken),
